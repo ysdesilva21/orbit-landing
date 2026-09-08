@@ -1,7 +1,17 @@
-import { useState } from "react";
+'use client';
+
+import { useState, useLayoutEffect, useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  const navContainerRef = useRef<HTMLElement>(null);
 
   const navLinks = [
     { label: "Product", href: "#product" },
@@ -10,14 +20,87 @@ export default function Header() {
     { label: "Pricing", href: "#pricing" },
   ];
 
-  return (
-    <header className="relative w-full bg-white">
-      <nav className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-6">
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
 
+      // 1. Unobtrusive Page Load Reveal
+      if (!prefersReducedMotion) {
+        gsap.fromTo(
+          headerRef.current,
+          { opacity: 0, y: -8 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.out",
+          }
+        );
+      } else {
+        gsap.set(headerRef.current, { opacity: 1, y: 0 });
+      }
+
+      // 2. Scroll Position Aware Transformation
+      ScrollTrigger.create({
+        start: "top+=20 top",
+        onEnter: () => {
+          gsap.to(headerRef.current, {
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            backgroundColor: "rgba(255, 255, 255, 0.92)",
+            backdropFilter: "blur(12px)",
+            borderBottomColor: "rgba(0, 0, 0, 0.06)",
+            boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.02)",
+            duration: 0.25,
+            ease: "power1.out",
+          });
+
+          gsap.to(navContainerRef.current, {
+            height: "64px",
+            duration: 0.25,
+            ease: "power1.out",
+          });
+        },
+        onLeaveBack: () => {
+          gsap.to(headerRef.current, {
+            position: "relative",
+            backgroundColor: "rgba(255, 255, 255, 1)",
+            backdropFilter: "blur(0px)",
+            borderBottomColor: "transparent",
+            boxShadow: "none",
+            duration: 0.25,
+            ease: "power1.out",
+          });
+
+          gsap.to(navContainerRef.current, {
+            height: "76px",
+            duration: 0.25,
+            ease: "power1.out",
+          });
+        },
+      });
+    }, headerRef);
+
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <header
+      ref={headerRef}
+      className="relative z-50 w-full border-b border-transparent bg-white transition-colors duration-200"
+    >
+      <nav
+        ref={navContainerRef}
+        className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-6 transition-[height] duration-200 ease-out"
+      >
         {/* Logo */}
         <a
           href="/"
-          className="flex items-center gap-2.5 no-underline"
+          className="flex items-center gap-2.5 no-underline opacity-100 transition-opacity duration-200 hover:opacity-90"
         >
           <img
             src="/orbit-logo.png"
@@ -42,6 +125,11 @@ export default function Header() {
                 text-[16px]
                 font-medium
                 leading-none
+                text-[var(--primary)]
+                opacity-80
+                transition-all
+                duration-200
+                hover:opacity-100
               "
             >
               {link.label}
@@ -61,13 +149,17 @@ export default function Header() {
             text-[16px]
             font-medium
             leading-none
+            transition-all
+            duration-200
+            hover:brightness-105
+            active:scale-[0.98]
             md:block
           "
         >
           Start Free
         </button>
 
-        {/* Tablet / Mobile Menu */}
+        {/* Tablet / Mobile Menu Toggle */}
         <button
           type="button"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -78,6 +170,9 @@ export default function Header() {
             text-[16px]
             font-medium
             text-[var(--primary)]
+            transition-opacity
+            duration-200
+            hover:opacity-75
             md:hidden
           "
         >
@@ -85,7 +180,7 @@ export default function Header() {
         </button>
       </nav>
 
-      {/* Tablet / Mobile Menu */}
+      {/* Tablet / Mobile Dropdown Panel */}
       <div
         className={`
           absolute
@@ -96,9 +191,11 @@ export default function Header() {
           overflow-hidden
           border-t
           border-black/5
-          bg-white
+          bg-white/98
+          backdrop-blur-md
           transition-all
-          duration-300
+          duration-200
+          ease-out
           md:hidden
           ${
             menuOpen
@@ -108,8 +205,7 @@ export default function Header() {
         `}
       >
         <div className="mx-auto max-w-7xl px-6 py-5">
-
-          {/* Navigation Links */}
+          {/* Mobile Navigation Links */}
           <div className="flex flex-col">
             {navLinks.map((link) => (
               <a
@@ -123,6 +219,10 @@ export default function Header() {
                   py-4
                   text-[16px]
                   font-medium
+                  text-[var(--primary)]
+                  transition-colors
+                  duration-150
+                  hover:text-[var(--accent)]
                 "
               >
                 {link.label}
@@ -130,7 +230,7 @@ export default function Header() {
             ))}
           </div>
 
-          {/* Menu CTA */}
+          {/* Mobile CTA */}
           <button
             type="button"
             onClick={() => setMenuOpen(false)}
@@ -143,11 +243,13 @@ export default function Header() {
               py-3
               text-[16px]
               font-medium
+              transition-all
+              duration-200
+              active:scale-[0.98]
             "
           >
             Start Free
           </button>
-
         </div>
       </div>
     </header>
