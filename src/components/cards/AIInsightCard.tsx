@@ -1,46 +1,48 @@
-import React from 'react';
+import React from "react";
 
 export default function AIInsightCard() {
   return (
-    <div className="w-[275px] h-[80px] bg-white rounded-2xl p-6 shadow-[0_2px_8px_rgba(0,0,0,0.25)] flex flex-col">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <h3 className="text-[16px] leading-none font-medium text-[var(--accent)]">
-          AI Insight
-        </h3>
-
-        {/* Arrow background */}
-        <div className="w-6.25 h-6.25 bg-white rounded-full shadow-[0_2px_8px_rgba(0,0,0,0.25)] flex items-center justify-center">
-          {/* External SVG goes here */}
-          <img
-            src="/arrow.svg"
-            alt=""
-            className="w-full h-full"
-          />
-        </div>
-      </div>
-
-      {/* Revenue insight */}
-      <div className="mt-auto">
-        <p className="text-[15px] leading-[1.2] text-[var(--ternary)]/80">
-          Revenue is
-          <span className="text-[15px] leading-[1.2] text-[var(--positive)]">
-          up 15.8%
-        </span>
-        </p>
-
+    <div className="w-[300px] rounded-[18px] border border-[#EBE8F0] bg-white/95 p-4 shadow-lg backdrop-blur-sm">
+      <div className="flex items-start justify-between">
         
-      </div>
+        {/* Content */}
+        <div className="space-y-1.5">
+          <h3 className="text-[17px] font-semibold tracking-tight text-[#5B3E86]">
+            AI Insight
+          </h3>
 
-      {/* Primary driver */}
-      <div className="text-right">
-        <p className="text-[12px] leading-[1.3] text-[var(--primary)]">
-          Primary driver:
-        </p>
+          <p className="text-[14px] font-medium text-[#4A5568]">
+            Revenue is up <span className="font-semibold text-[#1ECF7D]">15.8%</span>
+          </p>
 
-        <p className="text-[14px] leading-[1.3] text-[var(--ternary)]/50">
-          Enterprise expansion
-        </p>
+          <p className="pt-1 text-[12px] font-semibold text-[#2D3748]">
+            Primary driver :{" "}
+            <span className="font-normal text-[#8A94A6]">
+              Enterprise expansion
+            </span>
+          </p>
+        </div>
+
+        {/* Action Button */}
+        <button
+          type="button"
+          className="flex h-9 w-9 items-center justify-center rounded-xl border border-[#EBE8F0] bg-[#FAFAFC] text-[#2D3132] transition hover:bg-gray-100"
+          aria-label="Open AI Insight details"
+        >
+          <svg
+            className="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M7 17L17 7" />
+            <path d="M7 7h10v10" />
+          </svg>
+        </button>
+
       </div>
     </div>
   );
