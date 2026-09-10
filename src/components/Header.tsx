@@ -126,7 +126,6 @@ export default function Header() {
                 font-medium
                 leading-none
                 text-[var(--primary)]
-                opacity-80
                 transition-all
                 duration-200
                 hover:opacity-100
