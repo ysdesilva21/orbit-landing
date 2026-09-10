@@ -164,7 +164,7 @@ export const TrustSection: React.FC = () => {
         <div className="flex flex-col items-center lg:items-start text-center lg:text-left lg:pr-8 lg:border-r lg:border-slate-200 w-full overflow-hidden">
           <h3
             ref={leftHeadingRef}
-            className="text-xl sm:text-2xl font-bold text-slate-800 mb-10 lg:mb-10 lg:text-slate-400 lg:text-sm lg:font-semibold lg:uppercase lg:tracking-wider"
+            className="text-xl sm:text-2xl font-bold mb-10 lg:mb-5 text-slate-400 lg:text-sm lg:font-semibold lg:uppercase lg:tracking-wider"
           >
             Trusted by modern teams building with data
           </h3>
