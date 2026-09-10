@@ -2,10 +2,10 @@ import React from "react";
 
 export default function AIWorkflowCard() {
   return (
-    <div className="w-[360px] rounded-[10px] border border-[#EBE8F0] bg-white/95 px-4 py-2 shadow-lg backdrop-blur-sm">
+    <div className="w-[360px] rounded-[10px] border border-[#EBE8F0] bg-white/95 px-2 py-2 shadow-lg backdrop-blur-sm">
       
       {/* Header with Status Pill */}
-      <div className="mb-2 flex items-center justify-between">
+      <div className="mb-1 flex items-center justify-between">
         <h3 className="text-[16px] font-medium tracking-tight text-[var(--accent)]">
           AI Workflow
         </h3>
