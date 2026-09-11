@@ -1,22 +1,40 @@
+/* ========================================
+   IMPORTS
+   ======================================== */
+
 @import url('https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
+
 @import "tailwindcss";
+
+
+/* ========================================
+   UTILITIES
+   ======================================== */
 
 @layer utilities {
   .font-serif-italic {
-    font-family: 'Instrument Serif', Georgia, serif;
+    font-family: "Instrument Serif", Georgia, serif;
     font-style: italic;
   }
 }
 
+
+/* ========================================
+   DESIGN TOKENS
+   ======================================== */
+
 :root {
-  --primary: #2D3132;
-  --accent: #614986;
-  --secondary: #F3F6EF;
-  --ternary: #234152;
+  --primary: #211832;
+  --accent: #5C3E94;
+  --secondary: #F25912;
+  --ternary: #412B6B;
   --positive: #1ECF7D;
 }
 
 
+/* ========================================
+   BASE
+   ======================================== */
 
 body {
   font-family: "Familjen Grotesk", sans-serif;
@@ -24,14 +42,137 @@ body {
   background-color: #FFFFFF;
 }
 
-.dash-line {
-  stroke-dasharray: 4 4;
+
+/* ========================================
+   TYPOGRAPHY SYSTEM
+   ======================================== */
+
+/* -------- Eyebrow / Section Label -------- */
+
+.text-eyebrow {
+  font-family: "Familjen Grotesk", sans-serif;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ternary);
 }
-/* Navigation links */
-.header-link {
+
+
+/* ----------------------------------------
+   Hero Display
+   ---------------------------------------- */
+
+.text-display {
+  font-family: "Familjen Grotesk", sans-serif;
+  font-size: clamp(3rem, 7vw, 4rem);
+  font-weight: 600;
+  line-height: 0.95;
+  letter-spacing: -0.055em;
   color: var(--primary);
+  max-width: 12ch;
+}
+
+
+/* ----------------------------------------
+   Major Section Heading
+   ---------------------------------------- */
+
+.text-heading {
+  font-family: "Familjen Grotesk", sans-serif;
+  font-size: clamp(2.25rem, 5vw, 4.5rem);
+  font-weight: 500;
+  line-height: 0.98;
+  letter-spacing: -0.045em;
+  color: var(--primary);
+  max-width: 14ch;
+}
+
+/* ----------------------------------------
+   Secondary Heading
+   ---------------------------------------- */
+
+.text-subheading {
+  font-family: "Familjen Grotesk", sans-serif;
+  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.025em;
+  color: var(--primary);
+}
+
+
+/* ----------------------------------------
+   Third Heading
+   ---------------------------------------- */
+
+.text-third-heading {
+  font-family: "Familjen Grotesk", sans-serif;
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--primary);
+}
+
+
+/* ----------------------------------------
+   Body
+   ---------------------------------------- */
+
+.text-body {
+  font-family: "Familjen Grotesk", sans-serif;
+  font-size: clamp(1rem, 1.2vw, 1.0625rem);
+  font-weight: 400;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  color: color-mix(in srgb, var(--primary) 75%, transparent);
+  max-width: 38rem;
+}
+
+
+/* ----------------------------------------
+   Small Text
+   ---------------------------------------- */
+
+.text-small {
+  font-family: "Familjen Grotesk", sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: color-mix(in srgb, var(--primary) 65%, transparent);
+}
+
+
+/* ----------------------------------------
+   Dashboard Metric
+   ---------------------------------------- */
+
+.text-metric {
+  font-family: "Familjen Grotesk", sans-serif;
+  font-size: clamp(1.75rem, 3vw, 2.75rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--primary);
+}
+
+
+/* ========================================
+   NAVIGATION
+   ======================================== */
+
+.header-link {
+  position: relative;
+  font-family: "Familjen Grotesk", sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  color: color-mix(in srgb, var(--primary) 75%, transparent);
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color 200ms ease;
 }
 
 .header-link:hover {
@@ -46,42 +187,238 @@ body {
   width: 0;
   height: 1px;
   background-color: var(--accent);
-  transition: width 0.2s ease;
+  transition: width 200ms ease;
 }
 
 .header-link:hover::after {
   width: 100%;
 }
 
-/* Primary Button Style */
+/* ========================================
+   BUTTONS
+   ======================================== */
+
+/* ----------------------------------------
+   Primary Button
+   ---------------------------------------- */
+
 .primary-button {
-  background-color: var(--accent);
+  background-color: var(--secondary);
   color: #FFFFFF;
-  border: 2px solid var(--accent);
+  border: 2px solid var(--secondary);
   transition: all 200ms ease;
 }
 
-/* Primary Button Hover (Secondary button resting state styling) */
 .primary-button:hover {
-  background-color: color-mix(in srgb, var(--accent) 20%, transparent);
-  border-color: var(--accent);
-  color: var(--accent);
+  background-color: color-mix(
+    in srgb,
+    var(--secondary) 20%,
+    transparent
+  );
+
+  border-color: var(--secondary);
+  color: var(--secondary);
 }
 
-/* Secondary Button Style */
+
+/* ----------------------------------------
+   Secondary Button
+   ---------------------------------------- */
+
 .secondary-button {
-  background-color: color-mix(in srgb, var(--accent) 20%, transparent);
-  color: var(--primary);
-  border: 2px solid var(--accent);
+  background-color: color-mix(
+    in srgb,
+    var(--secondary) 20%,
+    transparent
+  );
+
+  color: var(--secondary);
+  border: 2px solid var(--secondary);
   transition: all 200ms ease;
 }
 
-/* Secondary Button Hover (No border, no background, text accent, underlined accent) */
 .secondary-button:hover {
   background-color: transparent !important;
   border-color: transparent !important;
-  color: var(--accent) !important;
+  color: var(--secondary) !important;
+
   text-decoration: underline !important;
-  text-decoration-color: var(--accent) !important;
+  text-decoration-color: var(--secondary) !important;
   text-underline-offset: 4px !important;
+}
+
+/* ========================================
+   CARDS
+   ======================================== */
+
+/* ----------------------------------------
+   Base Card
+   ---------------------------------------- */
+
+/*
+   Shared visual foundation for every card.
+
+   Background:
+   #5C3E94 at 5%
+
+   Border:
+   #C6D0D9 at 30%
+
+   Individual card types should only
+   control their layout, size and spacing.
+*/
+
+.card {
+  background-color: color-mix(
+    in srgb,
+    var(--accent) 5%,
+    transparent
+  );
+
+  border: 1px solid color-mix(
+    in srgb,
+    #C6D0D9 30%,
+    transparent
+  );
+
+  border-radius: 1rem;
+
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.05);
+
+  user-select: none;
+}
+
+
+/* ----------------------------------------
+   Main Card
+   ---------------------------------------- */
+
+.main-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  width: 100%;
+
+  padding: 1.25rem;
+}
+
+
+/* ----------------------------------------
+   Small Inner Card
+   ---------------------------------------- */
+
+.small-card {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+
+  width: 145px;
+  height: 64px;
+
+  padding: 0.5rem;
+
+  backdrop-filter: blur(4px);
+}
+
+
+/* ----------------------------------------
+   Small Card Label
+   ---------------------------------------- */
+
+.small-card-label {
+  margin-bottom: 0.25rem;
+
+  color: var(--ternary);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+
+/* ----------------------------------------
+   Small Card Value
+   ---------------------------------------- */
+
+.small-card-value {
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+
+/* ========================================
+   DATA VISUALIZATION
+   ======================================== */
+
+.dash-line {
+  stroke-dasharray: 4 4;
+}
+
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (min-width: 640px) {
+
+  .main-card {
+    padding: 1.5rem;
+  }
+
+  .small-card {
+    width: 160px;
+    padding: 0.625rem;
+  }
+
+  .small-card-label {
+    font-size: 0.75rem;
+  }
+
+  .small-card-value {
+    font-size: 0.875rem;
+  }
+}
+
+
+@media (max-width: 640px) {
+
+  /* --------------------------------------
+     Typography
+     -------------------------------------- */
+
+  .text-display {
+    font-size: clamp(2.75rem, 14vw, 4rem);
+    line-height: 0.92;
+    letter-spacing: -0.05em;
+    max-width: 10ch;
+  }
+
+  .text-heading {
+    font-size: clamp(2rem, 10vw, 3rem);
+    line-height: 0.98;
+    letter-spacing: -0.04em;
+    max-width: 12ch;
+  }
+
+  .text-subheading {
+    font-size: 1.25rem;
+    line-height: 1.1;
+  }
+
+  .text-body {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .text-metric {
+    font-size: 1.75rem;
+  }
+
+  .text-eyebrow {
+    font-size: 0.6875rem;
+    letter-spacing: 0.09em;
+  }
 }

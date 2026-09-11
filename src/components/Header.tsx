@@ -26,7 +26,6 @@ export default function Header() {
         "(prefers-reduced-motion: reduce)"
       ).matches;
 
-      // 1. Unobtrusive Page Load Reveal
       if (!prefersReducedMotion) {
         gsap.fromTo(
           headerRef.current,
@@ -42,7 +41,6 @@ export default function Header() {
         gsap.set(headerRef.current, { opacity: 1, y: 0 });
       }
 
-      // 2. Scroll Position Aware Transformation
       ScrollTrigger.create({
         start: "top+=20 top",
         onEnter: () => {
@@ -97,6 +95,7 @@ export default function Header() {
         ref={navContainerRef}
         className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-6 transition-[height] duration-200 ease-out"
       >
+
         {/* Logo */}
         <a
           href="/"
@@ -108,7 +107,15 @@ export default function Header() {
             className="block h-9 w-9 object-contain"
           />
 
-          <span className="text-[24px] font-semibold leading-none tracking-[-0.03em] text-[var(--primary)]">
+          <span
+            className="
+              text-[24px]
+              font-semibold
+              leading-none
+              tracking-[-0.03em]
+              text-[var(--primary)]
+            "
+          >
             Orbit
           </span>
         </a>
@@ -119,17 +126,7 @@ export default function Header() {
             <a
               key={link.label}
               href={link.href}
-              className="
-                header-link
-                relative
-                text-[16px]
-                font-medium
-                leading-none
-                text-[var(--primary)]
-                transition-all
-                duration-200
-                hover:opacity-100
-              "
+              className="header-link"
             >
               {link.label}
             </a>
@@ -145,7 +142,7 @@ export default function Header() {
             rounded-lg
             px-5
             py-2.5
-            text-[16px]
+            text-sm
             font-medium
             leading-none
             transition-all
@@ -166,8 +163,9 @@ export default function Header() {
           onClick={() => setMenuOpen(!menuOpen)}
           className="
             block
-            text-[16px]
+            text-sm
             font-medium
+            leading-none
             text-[var(--primary)]
             transition-opacity
             duration-200
@@ -204,6 +202,7 @@ export default function Header() {
         `}
       >
         <div className="mx-auto max-w-7xl px-6 py-5">
+
           {/* Mobile Navigation Links */}
           <div className="flex flex-col">
             {navLinks.map((link) => (
@@ -216,12 +215,6 @@ export default function Header() {
                   border-b
                   border-black/5
                   py-4
-                  text-[16px]
-                  font-medium
-                  text-[var(--primary)]
-                  transition-colors
-                  duration-150
-                  hover:text-[var(--accent)]
                 "
               >
                 {link.label}
@@ -240,8 +233,9 @@ export default function Header() {
               rounded-lg
               px-5
               py-3
-              text-[16px]
+              text-sm
               font-medium
+              leading-none
               transition-all
               duration-200
               active:scale-[0.98]
@@ -249,6 +243,7 @@ export default function Header() {
           >
             Start Free
           </button>
+
         </div>
       </div>
     </header>

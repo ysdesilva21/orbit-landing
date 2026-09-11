@@ -208,11 +208,11 @@ export default function Hero() {
           {/* Heading */}
           <h1
             ref={headlineRef}
-            className="mb-5 text-[34px] font-medium leading-[1.12] text-[var(--primary)] sm:text-[42px] md:text-[48px] lg:text-[64px]"
+            className="mb-5 text-display whitespace-nowrap"
           >
             Your business{' '}
             <span
-              className="font-normal italic text-[var(--accent)]"
+              className="font-normal italic text-[var(--secondary)]"
               style={{ fontFamily: "'Instrument Serif', serif" }}
             >
               data.
@@ -220,7 +220,7 @@ export default function Hero() {
             <br />
             One{' '}
             <span
-              className="font-normal italic text-[var(--accent)]"
+              className="font-normal italic text-[var(--secondary)]"
               style={{ fontFamily: "'Instrument Serif', serif" }}
             >
               intelligent
@@ -231,7 +231,7 @@ export default function Hero() {
           {/* Description */}
           <p
             ref={descriptionRef}
-            className="mb-8 max-w-lg text-[18px] font-medium leading-[1.55] text-[var(--ternary)] sm:text-[16px] md:text-[17px]"
+            className="mb-8 max-w-lg text-body"
           >
             Orbit connects the tools your business already runs on, analyzes
             the data with AI, and surfaces the insights that matter, without
