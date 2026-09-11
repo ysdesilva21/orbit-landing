@@ -1,47 +1,152 @@
 import React from 'react';
-import { ArrowRight, Sparkles,} from 'lucide-react';
+import { ArrowRight, Sparkles } from 'lucide-react';
 
 export const CallToAction: React.FC = () => {
   return (
-    <section className="relative overflow-hidden py-24 bg-[#0B0C10] text-white">
-      {/* Background Gradient Blurs */}
-      <div className="absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-96 h-96 bg-purple-600/20 rounded-full blur-[128px] pointer-events-none" />
-      <div className="absolute top-1/2 right-1/4 -translate-y-1/2 translate-x-1/2 w-96 h-96 bg-indigo-600/20 rounded-full blur-[128px] pointer-events-none" />
+    <section className="relative overflow-hidden bg-white py-24">
+      
+      {/* Subtle Background Accents */}
+      <div
+        className="
+          pointer-events-none
+          absolute
+          left-1/4
+          top-1/2
+          h-80
+          w-80
+          -translate-x-1/2
+          -translate-y-1/2
+          rounded-full
+          bg-[#5C3E94]/10
+          blur-[120px]
+        "
+      />
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
-        <div className="relative rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-white/[0.02] p-8 md:p-14 backdrop-blur-2xl shadow-2xl shadow-purple-950/20 overflow-hidden">
-          
-          {/* Subtle Grid Accent */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none" />
+      <div
+        className="
+          pointer-events-none
+          absolute
+          right-1/4
+          top-1/2
+          h-80
+          w-80
+          translate-x-1/2
+          -translate-y-1/2
+          rounded-full
+          bg-[#F25912]/8
+          blur-[120px]
+        "
+      />
 
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-10 relative z-10">
-            {/* Left Column Text Content */}
-            <div className="max-w-2xl space-y-4 text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-300 text-xs font-semibold uppercase tracking-wider">
-                <Sparkles className="w-3.5 h-3.5 text-purple-400" />
-                ONE SOURCE
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+
+        {/* CTA Card */}
+        <div
+          className="
+            relative
+            overflow-hidden
+            main-card card
+            p-8
+            md:p-14
+          "
+        >
+
+          {/* Subtle Grid */}
+          <div
+            className="
+              pointer-events-none
+              absolute
+              inset-0
+              opacity-40
+              [background-image:linear-gradient(to_right,#5C3E9410_1px,transparent_1px),linear-gradient(to_bottom,#5C3E9410_1px,transparent_1px)]
+              [background-size:24px_24px]
+            "
+          />
+
+          {/* Content */}
+          <div className="relative z-10 flex flex-col items-center justify-between gap-10 lg:flex-row">
+
+            {/* Text */}
+            <div className="max-w-2xl text-center lg:text-left">
+
+              <div className="mb-5 inline-flex items-center gap-2">
+                <Sparkles
+                  className="h-3.5 w-3.5 text-[var(--accent)]"
+                  strokeWidth={2}
+                />
+
+                <span className="text-eyebrow">
+                  One source
+                </span>
               </div>
-              
-              <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
-                Stop piecing the business <span className="italic font-serif font-normal bg-gradient-to-r from-purple-300 via-indigo-200 to-purple-400 bg-clip-text text-transparent">together.</span>
+
+              <h2 className="text-heading max-w-2xl">
+                Stop piecing the business{' '}
+                <span className="font-serif-italic text-[var(--accent)]">
+                  together.
+                </span>
               </h2>
 
-              <p className="text-lg text-slate-300 font-normal max-w-xl">
-                Bring your revenue, customers, acquisition, and product data into one place.
+              <p className="text-body mt-6 max-w-xl">
+                Bring your revenue, customers, acquisition, and product data
+                into one place — and turn it into decisions you can act on.
               </p>
+
             </div>
 
-            {/* Right Column Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-              <button className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-medium shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-[1.02] transition-all duration-200 active:scale-[0.98]">
+            {/* Actions */}
+            <div className="flex w-full shrink-0 flex-col items-center gap-3 sm:w-auto sm:flex-row">
+
+              <button
+                type="button"
+                className="
+                  primary-button
+                  inline-flex
+                  w-full
+                  items-center
+                  justify-center
+                  gap-2
+                  rounded-lg
+                  px-6
+                  py-3
+                  text-sm
+                  font-medium
+                  shadow-sm
+                  hover:-translate-y-0.5
+                  hover:shadow-md
+                  active:translate-y-0
+                  sm:w-auto
+                "
+              >
                 <span>Start Analyzing</span>
-                <ArrowRight className="w-4 h-4" />
+
+                <ArrowRight
+                  className="h-4 w-4"
+                  strokeWidth={2}
+                />
               </button>
 
-              <button className="w-full sm:w-auto inline-flex items-center justify-center px-7 py-3.5 rounded-xl border border-white/15 bg-white/5 text-white font-medium hover:bg-white/10 hover:border-white/25 transition-all duration-200 active:scale-[0.98]">
+              <button
+                type="button"
+                className="
+                  secondary-button
+                  inline-flex
+                  w-full
+                  items-center
+                  justify-center
+                  rounded-lg
+                  px-6
+                  py-3
+                  text-sm
+                  font-medium
+                  sm:w-auto
+                "
+              >
                 View Problem
               </button>
+
             </div>
+
           </div>
         </div>
       </div>
