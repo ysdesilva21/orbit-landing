@@ -2,7 +2,9 @@ import React, { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-gsap.registerPlugin(ScrollTrigger);
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 interface Logo {
   name: string;
@@ -30,16 +32,13 @@ export const TrustSection: React.FC = () => {
     const section = sectionRef.current;
     if (!section) return;
 
-    // Check accessibility setting
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (prefersReducedMotion) {
-      // Keep everything static and fully visible
-      return;
-    }
+    if (prefersReducedMotion) return;
 
     const ctx = gsap.context(() => {
-      // 1. Top Heading Scroll Reveal
+      const customEase = 'cubic-bezier(0.22, 1, 0.36, 1)';
+
+      // 1. Top Banner Heading Reveal
       if (headingRef.current) {
         gsap.fromTo(
           headingRef.current,
@@ -47,68 +46,82 @@ export const TrustSection: React.FC = () => {
           {
             opacity: 1,
             y: 0,
-            duration: 0.8,
-            ease: 'power3.out',
+            duration: 0.9,
+            ease: customEase,
             scrollTrigger: {
               trigger: headingRef.current,
-              start: 'top 80%',
-              once: true,
+              start: 'top 85%',
+              end: 'bottom top',
+              toggleActions: 'play none none reverse',
             },
           }
         );
       }
 
-      // 2. Left Column Reveal (Heading + Logo Area Stagger)
-      const leftElements = [leftHeadingRef.current, logoContainerRef.current].filter(Boolean);
-      if (leftElements.length > 0) {
+      // 2. Left Column Heading & Logo Wrapper Reveal
+      if (leftHeadingRef.current) {
         gsap.fromTo(
-          leftElements,
+          leftHeadingRef.current,
           { opacity: 0, y: 20 },
           {
             opacity: 1,
             y: 0,
-            duration: 0.7,
-            stagger: 0.15,
-            ease: 'power3.out',
+            duration: 0.8,
+            ease: customEase,
             scrollTrigger: {
               trigger: leftHeadingRef.current,
-              start: 'top 80%',
-              once: true,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
             },
           }
         );
       }
 
-      // 2. Right Testimonial Card Reveal
+      // 3. Right Testimonial Card Reveal
       if (testimonialCardRef.current) {
         gsap.fromTo(
           testimonialCardRef.current,
-          { opacity: 0, y: 30, scale: 0.98 },
+          { opacity: 0, y: 32, scale: 0.96 },
           {
             opacity: 1,
             y: 0,
             scale: 1,
-            duration: 0.8,
-            delay: 0.1,
-            ease: 'power3.out',
+            duration: 0.95,
+            ease: customEase,
             scrollTrigger: {
               trigger: testimonialCardRef.current,
-              start: 'top 80%',
-              once: true,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
             },
           }
         );
       }
 
-      // 3, 4, 5, 8. Responsive Logo Animation handling (gsap.matchMedia)
+      // 4. Responsive MatchMedia (Marquee for Mobile/Tablet, Stagger Reveal for Desktop)
       const mm = gsap.matchMedia();
 
-      // Tablet + Mobile (<1024px) -> Infinite marquee loop
+      // Tablet + Mobile (<1024px) -> Infinite Marquee Loop
       mm.add('(max-width: 1023px)', () => {
         const track = logoTrackRef.current;
         if (!track) return;
 
-        // Animate xPercent from 0 to -50% (assuming content is duplicated once, so -50% is 1 full loop width)
+        // Fade in container first
+        gsap.fromTo(
+          logoContainerRef.current,
+          { opacity: 0, y: 16 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: customEase,
+            scrollTrigger: {
+              trigger: logoContainerRef.current,
+              start: 'top 85%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+
         const marqueeTween = gsap.to(track, {
           xPercent: -50,
           repeat: -1,
@@ -123,10 +136,30 @@ export const TrustSection: React.FC = () => {
         };
       });
 
-      // Desktop (>=1024px) -> Keep existing grid layout (no marquee tween)
+      // Desktop (>=1024px) -> Staggered Grid Logo Entrance
       mm.add('(min-width: 1024px)', () => {
-        if (logoTrackRef.current) {
-          gsap.set(logoTrackRef.current, { clearProps: 'xPercent' });
+        if (!logoTrackRef.current) return;
+        
+        gsap.set(logoTrackRef.current, { clearProps: 'xPercent' });
+
+        const desktopLogos = logoTrackRef.current.querySelectorAll('.desktop-logo');
+        if (desktopLogos.length > 0) {
+          gsap.fromTo(
+            desktopLogos,
+            { opacity: 0, y: 18 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.7,
+              stagger: 0.08,
+              ease: customEase,
+              scrollTrigger: {
+                trigger: logoContainerRef.current,
+                start: 'top 85%',
+                toggleActions: 'play none none reverse',
+              },
+            }
+          );
         }
       });
     }, section);
@@ -136,7 +169,6 @@ export const TrustSection: React.FC = () => {
     };
   }, []);
 
-  // Duplicate logos once for seamless looping marquee on mobile/tablet
   const marqueeLogos = [...LOGOS, ...LOGOS];
 
   return (
@@ -204,7 +236,7 @@ export const TrustSection: React.FC = () => {
                   {LOGOS.map((logo) => (
                     <span
                       key={`desktop-${logo.name}`}
-                      className={`hidden lg:inline-block text-lg sm:text-xl lg:text-lg whitespace-nowrap ${logo.styleClass}`}
+                      className={`desktop-logo hidden lg:inline-block text-lg sm:text-xl lg:text-lg whitespace-nowrap ${logo.styleClass}`}
                     >
                       {logo.name}
                     </span>
@@ -229,7 +261,7 @@ export const TrustSection: React.FC = () => {
                 className="w-12 h-12 rounded-full object-cover"
               />
               <div className="text-left">
-                <div className="font-bold text-slate-900 text-sm sm:text-base">
+                <div className="font-bold text-[var] text-sm sm:text-base">
                   Kaite Nathan
                 </div>
                 <div className="text-xs sm:text-sm text-slate-600 font-medium">

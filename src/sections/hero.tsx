@@ -48,7 +48,9 @@ export default function Hero() {
 
       const customEase = 'cubic-bezier(0.22, 1, 0.36, 1)';
 
-      // Initial state setup
+      // -------------------------------------------------------------
+      // 1. Initial State Setup
+      // -------------------------------------------------------------
       gsap.set([headlineRef.current, descriptionRef.current, ctaRef.current], {
         opacity: 0,
         y: 18,
@@ -72,10 +74,17 @@ export default function Hero() {
         }
       );
 
-      // Entrance sequence
+      // -------------------------------------------------------------
+      // 2. Entrance Sequence
+      // -------------------------------------------------------------
       const entranceTl = gsap.timeline({
         delay: 0.1,
         defaults: { ease: customEase },
+        onComplete: () => {
+          // Initialize ScrollTrigger only AFTER entrance sequence finishes
+          // to prevent property collision
+          initScrollTrigger();
+        },
       });
 
       entranceTl
@@ -127,23 +136,63 @@ export default function Hero() {
           '-=0.45'
         );
 
-      // Scroll scrubbing
-      const scrollTl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: 1.0,
-          invalidateOnRefresh: true,
-        },
-      });
+      // -------------------------------------------------------------
+      // 3. Scroll Scrubbing Timeline with Explicit `fromTo` Bounds
+      // -------------------------------------------------------------
+      function initScrollTrigger() {
+        const scrollTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1.0,
+            invalidateOnRefresh: true,
+          },
+        });
 
-      scrollTl.to(headlineRef.current, { y: -25, opacity: 0.3, ease: 'none' }, 0);
-      scrollTl.to([descriptionRef.current, ctaRef.current], { y: -38, opacity: 0.2, ease: 'none' }, 0);
-      scrollTl.to(canvasRef.current, { y: -15, scale: 0.98, ease: 'none' }, 0);
-      scrollTl.to(cardInsightRef.current, { y: -32, x: -6, ease: 'none' }, 0);
-      scrollTl.to(cardOverviewRef.current, { y: -18, x: 8, ease: 'none' }, 0);
-      scrollTl.to(cardWorkflowRef.current, { y: -40, x: -4, ease: 'none' }, 0);
+        // Explicitly defining standard start state (opacity 1, y 0) -> target state on scroll
+        scrollTl.fromTo(
+          headlineRef.current,
+          { opacity: 1, y: 0 },
+          { opacity: 0.3, y: -25, ease: 'none' },
+          0
+        );
+
+        scrollTl.fromTo(
+          [descriptionRef.current, ctaRef.current],
+          { opacity: 1, y: 0 },
+          { opacity: 0.2, y: -38, ease: 'none' },
+          0
+        );
+
+        scrollTl.fromTo(
+          canvasRef.current,
+          { y: 0, scale: 1 },
+          { y: -15, scale: 0.98, ease: 'none' },
+          0
+        );
+
+        scrollTl.fromTo(
+          cardInsightRef.current,
+          { y: 0, x: 0 },
+          { y: -32, x: -6, ease: 'none' },
+          0
+        );
+
+        scrollTl.fromTo(
+          cardOverviewRef.current,
+          { y: 0, x: 0 },
+          { y: -18, x: 8, ease: 'none' },
+          0
+        );
+
+        scrollTl.fromTo(
+          cardWorkflowRef.current,
+          { y: 0, x: 0 },
+          { y: -40, x: -4, ease: 'none' },
+          0
+        );
+      }
     }, sectionRef);
 
     return () => ctx.revert();
@@ -209,14 +258,13 @@ export default function Hero() {
         {/* Right Content - Visual Canvas */}
         <div className="-mx-6 relative w-[calc(100%+3rem)] md:mx-0 md:w-full md:max-w-[620px] lg:w-1/2 lg:max-w-[540px]">
           
-          {/* Canvas Height Adjusted for Tablet (md:h-[480px]) */}
           <div
             ref={canvasRef}
             className="relative h-[620px] w-full overflow-hidden md:h-[480px] md:rounded-[15px] lg:h-[560px]"
           >
 
             {/* Background Image Container */}
-            <div ref={bgImageRef} className="absolute inset-0 bg-[#C1C9DF]">
+            <div ref={bgImageRef} className="absolute inset-0">
               <img
                 src="/orbit-hero-bg.png"
                 alt="Orbit Hero Background"
@@ -224,7 +272,7 @@ export default function Hero() {
               />
             </div>
 
-            {/* AI Insight Card (Top-Left) */}
+            {/* AI Insight Card */}
             <div
               ref={cardInsightRef}
               className="absolute -left-2 top-[4%] z-20 origin-top-left md:left-[4%] md:top-[4%] md:scale-[0.88] lg:scale-100"
@@ -232,7 +280,7 @@ export default function Hero() {
               <AIInsightCard />
             </div>
 
-            {/* Business Overview Card (Center-Right) */}
+            {/* Business Overview Card */}
             <div
               ref={cardOverviewRef}
               className="absolute -right-50 top-[18%] z-10 origin-top-right md:right-[4%] md:top-[22%] md:scale-[0.88] lg:scale-100"
@@ -240,7 +288,7 @@ export default function Hero() {
               <BusinessOverviewCard />
             </div>
 
-            {/* AI Workflow Card (Bottom-Left) */}
+            {/* AI Workflow Card */}
             <div
               ref={cardWorkflowRef}
               className="absolute -left-2 bottom-[4%] z-20 origin-bottom-left md:left-[4%] md:bottom-[4%] md:scale-[0.88] lg:scale-100"
