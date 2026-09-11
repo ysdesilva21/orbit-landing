@@ -2,186 +2,506 @@ import React, { useState } from 'react';
 import { Check } from 'lucide-react';
 
 export const Pricing: React.FC = () => {
-  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>('monthly');
+  const [billingCycle, setBillingCycle] = useState<'monthly' | 'yearly'>(
+    'monthly'
+  );
+
+  const monthlyGrowthPrice = 149;
+  const fullYearlyPrice = monthlyGrowthPrice * 12;
+  const yearlyGrowthPrice = fullYearlyPrice * 0.8;
+  const yearlySavings = fullYearlyPrice - yearlyGrowthPrice;
+
+  const isYearly = billingCycle === 'yearly';
 
   return (
-    <section className="py-20 bg-[#F9F8FD] text-[#221C38]">
-      <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <div className="text-center max-w-2xl mx-auto mb-10">
-          <p className="text-xs font-semibold tracking-wider uppercase text-[#6E55A0] mb-2">
-            PRICING PLANS
+    <section className="bg-white py-20">
+      <div className="mx-auto max-w-7xl px-6">
+
+        {/* HEADER */}
+        <div className="mx-auto mb-10 max-w-2xl text-center">
+          <p className="text-eyebrow mb-4">
+            Pricing Plans
           </p>
-          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight mb-3">
-            <span className="italic font-serif font-normal text-[#6E55A0]">Simple</span> pricing plans for your budget
+
+          <h2 className="text-heading mx-auto mb-4 max-w-2xl">
+            <span className="font-serif-italic text-[var(--secondary)]">
+              Simple
+            </span>{' '}
+            pricing plans for your budget
           </h2>
-          <p className="text-slate-600 text-base">
+
+          <p className="text-body mx-auto">
             Everything you need to understand the business.
           </p>
 
-          {/* Toggle */}
-          <div className="mt-8 inline-flex items-center p-1 bg-[#EBE7F5] rounded-xl">
+          {/* BILLING TOGGLE */}
+          <div
+            className="
+              mt-8
+              inline-flex
+              items-center
+              rounded-xl
+              border
+              border-[color-mix(in_srgb,#C6D0D9_30%,transparent)]
+              bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]
+              p-1
+            "
+          >
             <button
+              type="button"
               onClick={() => setBillingCycle('monthly')}
-              className={`px-5 py-2 rounded-lg text-sm font-medium transition-all ${
-                billingCycle === 'monthly'
-                  ? 'bg-[#DDD5ED] text-[#221C38] shadow-sm'
-                  : 'text-slate-600 hover:text-black'
-              }`}
+              className={`
+                rounded-lg
+                px-5
+                py-2
+                text-sm
+                font-medium
+                transition-all
+                ${
+                  billingCycle === 'monthly'
+                    ? `
+                      bg-[color-mix(in_srgb,var(--accent)_15%,transparent)]
+                      text-[var(--primary)]
+                      shadow-sm
+                    `
+                    : `
+                      text-[color-mix(in_srgb,var(--primary)_65%,transparent)]
+                      hover:text-[var(--primary)]
+                    `
+                }
+              `}
             >
               Monthly
             </button>
+
             <button
+              type="button"
               onClick={() => setBillingCycle('yearly')}
-              className={`px-5 py-2 rounded-lg text-sm font-medium flex items-center gap-2 transition-all ${
-                billingCycle === 'yearly'
-                  ? 'bg-[#DDD5ED] text-[#221C38] shadow-sm'
-                  : 'text-slate-600 hover:text-black'
-              }`}
+              className={`
+                flex
+                items-center
+                gap-2
+                rounded-lg
+                px-5
+                py-2
+                text-sm
+                font-medium
+                transition-all
+                ${
+                  billingCycle === 'yearly'
+                    ? `
+                      bg-[color-mix(in_srgb,var(--accent)_15%,transparent)]
+                      text-[var(--primary)]
+                      shadow-sm
+                    `
+                    : `
+                      text-[color-mix(in_srgb,var(--primary)_65%,transparent)]
+                      hover:text-[var(--primary)]
+                    `
+                }
+              `}
             >
               <span>Yearly</span>
-              <span className="text-[10px] uppercase bg-white text-[#6E55A0] px-1.5 py-0.5 rounded font-semibold border border-[#D5CBEA]">
+
+              <span
+                className="
+                  rounded
+                  border
+                  border-[color-mix(in_srgb,var(--accent)_25%,transparent)]
+                  bg-white
+                  px-1.5
+                  py-0.5
+                  text-[10px]
+                  font-semibold
+                  uppercase
+                  text-[var(--accent)]
+                "
+              >
                 Save 20%
               </span>
             </button>
           </div>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch mb-20">
-          {/* Starter Plan */}
-          <div className="bg-[#F2EFF8] border border-[#E3DEF0] rounded-2xl p-8 flex flex-col justify-between">
+        {/* PRICING CARDS */}
+        <div className="mb-20 grid grid-cols-1 items-stretch gap-6 md:grid-cols-3">
+
+          {/* STARTER */}
+          <div
+            className="
+              card
+              flex
+              flex-col
+              justify-between
+              bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]
+              p-8
+            "
+          >
             <div>
-              <h3 className="text-xl font-bold mb-2">Starter</h3>
-              <div className="flex items-baseline gap-1 mb-2">
-                <span className="text-3xl font-bold">$0</span>
-                <span className="text-slate-500 text-sm">/mo</span>
+              <h3 className="text-subheading mb-2">
+                Starter
+              </h3>
+
+              <div className="mb-2 flex items-baseline gap-1">
+                <span className="text-metric">
+                  $0
+                </span>
+
+                <span className="text-small">
+                  /mo
+                </span>
               </div>
-              <p className="text-slate-500 text-xs mb-8">
+
+              <p className="text-small mb-8 max-w-xs">
                 For small teams getting their data in one place.
               </p>
 
-              <ul className="space-y-4 text-sm text-slate-700">
-                <li className="flex items-center gap-3">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> Up to 5 users
+              <ul className="space-y-4">
+                <li className="flex items-center gap-3 text-sm">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--accent)]"
+                    strokeWidth={2}
+                  />
+                  Up to 5 users
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> 3 data source
+
+                <li className="flex items-center gap-3 text-sm">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--accent)]"
+                    strokeWidth={2}
+                  />
+                  3 data sources
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> 5 dashboard
+
+                <li className="flex items-center gap-3 text-sm">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--accent)]"
+                    strokeWidth={2}
+                  />
+                  5 dashboards
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> Automated reports
+
+                <li className="flex items-center gap-3 text-sm">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--accent)]"
+                    strokeWidth={2}
+                  />
+                  Automated reports
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> Email support
+
+                <li className="flex items-center gap-3 text-sm">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--accent)]"
+                    strokeWidth={2}
+                  />
+                  Email support
                 </li>
               </ul>
             </div>
           </div>
 
-          {/* Growth Plan (Highlighted) */}
-          <div className="bg-[#E4DEEE] border-2 border-[#6E55A0] rounded-2xl p-8 flex flex-col justify-between relative shadow-lg">
-            <span className="absolute top-6 right-6 text-xs font-semibold text-[#6E55A0]">
+          {/* GROWTH */}
+          <div
+            className="
+              relative
+              flex
+              flex-col
+              justify-between
+              rounded-2xl
+              border-2
+              border-[var(--secondary)]
+              bg-[color-mix(in_srgb,var(--secondary)_10%,transparent)]
+              p-8
+              shadow-lg
+            "
+          >
+            <span
+              className="
+                absolute
+                right-6
+                top-6
+                text-small
+                font-semibold
+                text-[var(--secondary)]
+              "
+            >
               Recommended
             </span>
-            <div>
-              <h3 className="text-xl font-bold mb-2">Growth</h3>
-              <div className="flex items-baseline gap-1 mb-2">
-                <span className="text-3xl font-bold">$149</span>
-                <span className="text-slate-500 text-sm">/mo</span>
-              </div>
-              <p className="text-slate-600 text-xs mb-8">
-                For growing teams that need deeper insights and automation.
-              </p>
 
-              <ul className="space-y-4 text-sm text-slate-700">
-                <li className="flex items-center gap-3 font-medium">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> Up to 25 users
+            <div>
+              <h3 className="text-subheading mb-2">
+                Growth
+              </h3>
+
+              {/* GROWTH PRICE */}
+              <div className="mb-2">
+                {isYearly ? (
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span
+                      className="
+                        text-small
+                        text-[color-mix(in_srgb,var(--primary)_45%,transparent)]
+                        line-through
+                      "
+                    >
+                      ${fullYearlyPrice.toLocaleString()}
+                    </span>
+
+                    <span className="text-metric text-[var(--secondary)]">
+                      ${yearlyGrowthPrice.toFixed(2)}
+                    </span>
+
+                    <span className="text-small">
+                      /year
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-metric">
+                      ${monthlyGrowthPrice}
+                    </span>
+
+                    <span className="text-small">
+                      /mo
+                    </span>
+                  </div>
+                )}
+              </div>
+
+              {/* YEARLY SAVINGS */}
+              {isYearly && (
+                <p className="mb-8 text-small text-[var(--secondary)]">
+                  Save ${yearlySavings.toFixed(2)} · 20% off
+                </p>
+              )}
+
+              {!isYearly && (
+                <p className="text-small mb-8 max-w-xs">
+                  For growing teams that need deeper insights and automation.
+                </p>
+              )}
+
+              {isYearly && (
+                <p className="text-small mb-8 max-w-xs">
+                  For growing teams that need deeper insights and automation.
+                </p>
+              )}
+
+              <ul className="space-y-4">
+                <li className="flex items-center gap-3 text-sm font-medium">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--secondary)]"
+                    strokeWidth={2}
+                  />
+                  Up to 25 users
                 </li>
-                <li className="flex items-center gap-3 font-medium">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> 15 data sources
+
+                <li className="flex items-center gap-3 text-sm font-medium">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--secondary)]"
+                    strokeWidth={2}
+                  />
+                  15 data sources
                 </li>
-                <li className="flex items-center gap-3 font-medium">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> Unlimited dashboards
+
+                <li className="flex items-center gap-3 text-sm font-medium">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--secondary)]"
+                    strokeWidth={2}
+                  />
+                  Unlimited dashboards
                 </li>
-                <li className="flex items-center gap-3 font-medium">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> Automated reports
+
+                <li className="flex items-center gap-3 text-sm font-medium">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--secondary)]"
+                    strokeWidth={2}
+                  />
+                  Automated reports
                 </li>
-                <li className="flex items-center gap-3 font-medium">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> Custom metrics
+
+                <li className="flex items-center gap-3 text-sm font-medium">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--secondary)]"
+                    strokeWidth={2}
+                  />
+                  Custom metrics
                 </li>
-                <li className="flex items-center gap-3 font-medium">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> AI insights
+
+                <li className="flex items-center gap-3 text-sm font-medium">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--secondary)]"
+                    strokeWidth={2}
+                  />
+                  AI insights
                 </li>
-                <li className="flex items-center gap-3 font-medium">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> Priority support
+
+                <li className="flex items-center gap-3 text-sm font-medium">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--secondary)]"
+                    strokeWidth={2}
+                  />
+                  Priority support
                 </li>
               </ul>
             </div>
           </div>
 
-          {/* Enterprise Plan */}
-          <div className="bg-[#F2EFF8] border border-[#E3DEF0] rounded-2xl p-8 flex flex-col justify-between">
+          {/* ENTERPRISE */}
+          <div
+            className="
+              card
+              flex
+              flex-col
+              justify-between
+              bg-[color-mix(in_srgb,var(--accent)_5%,transparent)]
+              p-8
+            "
+          >
             <div>
-              <h3 className="text-xl font-bold mb-2">Enterprise</h3>
+              <h3 className="text-subheading mb-2">
+                Enterprise
+              </h3>
+
               <div className="mb-2">
-                <span className="text-3xl font-bold">Custom</span>
+                <span className="text-metric">
+                  Custom
+                </span>
               </div>
-              <p className="text-slate-500 text-xs mb-6">
+
+              <p className="text-small mb-6 max-w-xs">
                 For larger teams with complex data and advanced needs.
               </p>
 
-              <button className="w-full py-2.5 mb-6 px-4 rounded-xl border border-[#6E55A0] text-[#221C38] bg-[#DDD5ED] hover:bg-[#d0c5e3] transition font-medium text-sm">
+              <button
+                type="button"
+                className="
+                  secondary-button
+                  mb-6
+                  w-full
+                  rounded-lg
+                  px-4
+                  py-2.5
+                  text-sm
+                  font-medium
+                "
+              >
                 Talk to sales
               </button>
 
-              <ul className="space-y-4 text-sm text-slate-700">
-                <li className="flex items-center gap-3">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> Unlimited data sources
+              <ul className="space-y-4">
+                <li className="flex items-center gap-3 text-sm">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--accent)]"
+                    strokeWidth={2}
+                  />
+                  Unlimited data sources
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> Unlimited users
+
+                <li className="flex items-center gap-3 text-sm">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--accent)]"
+                    strokeWidth={2}
+                  />
+                  Unlimited users
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> Unlimited dashboards
+
+                <li className="flex items-center gap-3 text-sm">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--accent)]"
+                    strokeWidth={2}
+                  />
+                  Unlimited dashboards
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> Automated reports
+
+                <li className="flex items-center gap-3 text-sm">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--accent)]"
+                    strokeWidth={2}
+                  />
+                  Automated reports
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> Custom metrics
+
+                <li className="flex items-center gap-3 text-sm">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--accent)]"
+                    strokeWidth={2}
+                  />
+                  Custom metrics
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> AI insights
+
+                <li className="flex items-center gap-3 text-sm">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--accent)]"
+                    strokeWidth={2}
+                  />
+                  AI insights
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> Advanced permissions
+
+                <li className="flex items-center gap-3 text-sm">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--accent)]"
+                    strokeWidth={2}
+                  />
+                  Advanced permissions
                 </li>
-                <li className="flex items-center gap-3">
-                  <Check className="w-4 h-4 text-[#6E55A0] shrink-0" /> Dedicated support
+
+                <li className="flex items-center gap-3 text-sm">
+                  <Check
+                    className="h-4 w-4 shrink-0 text-[var(--accent)]"
+                    strokeWidth={2}
+                  />
+                  Dedicated support
                 </li>
               </ul>
             </div>
           </div>
         </div>
 
-        {/* Bottom Metrics Bar */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center pt-8 border-t border-[#E3DEF0]/60">
+        {/* BOTTOM METRICS */}
+        <div
+          className="
+            grid
+            grid-cols-1
+            gap-8
+            border-t
+            border-[color-mix(in_srgb,#C6D0D9_30%,transparent)]
+            pt-8
+            text-center
+            md:grid-cols-3
+          "
+        >
           <div>
-            <div className="text-3xl sm:text-4xl font-bold text-[#6E55A0]">14, 000+</div>
-            <div className="text-slate-500 font-medium text-sm mt-1">teams</div>
+            <div className="text-metric text-[var(--accent)]">
+              14,000+
+            </div>
+
+            <div className="text-small mt-1">
+              teams
+            </div>
           </div>
+
           <div>
-            <div className="text-3xl sm:text-4xl font-bold text-[#6E55A0]">45M+</div>
-            <div className="text-slate-500 font-medium text-sm mt-1">data points analyzed</div>
+            <div className="text-metric text-[var(--accent)]">
+              45M+
+            </div>
+
+            <div className="text-small mt-1">
+              data points analyzed
+            </div>
           </div>
+
           <div>
-            <div className="text-3xl sm:text-4xl font-bold text-[#6E55A0]">99.9%</div>
-            <div className="text-slate-500 font-medium text-sm mt-1">uptime</div>
+            <div className="text-metric text-[var(--accent)]">
+              99.9%
+            </div>
+
+            <div className="text-small mt-1">
+              uptime
+            </div>
           </div>
         </div>
+
       </div>
     </section>
   );
