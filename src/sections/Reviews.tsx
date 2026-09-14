@@ -1,6 +1,9 @@
 import React, { useRef } from "react";
+
 import { gsap } from "gsap";
+
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import { useGSAP } from "@gsap/react";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -49,9 +52,15 @@ export const Reviews: React.FC = () => {
       // ========================================
 
       const eyebrow = section.querySelector(".reviews-eyebrow");
+
       const heading = section.querySelector(".reviews-heading");
+
       const description = section.querySelector(
         ".reviews-description"
+      );
+
+      const reviewItems = gsap.utils.toArray<HTMLElement>(
+        ".review-item"
       );
 
       const cards = gsap.utils.toArray<HTMLElement>(
@@ -87,258 +96,422 @@ export const Reviews: React.FC = () => {
       );
 
       // ========================================
-      // INITIAL STATES
+      // REDUCED MOTION
       // ========================================
 
-      gsap.set(eyebrow, {
-        y: 25,
-        opacity: 0,
-      });
+      if (
+        window.matchMedia("(prefers-reduced-motion: reduce)")
+          .matches
+      ) {
+        return;
+      }
 
-      gsap.set(heading, {
-        y: 45,
-        opacity: 0,
-      });
+      const mm = gsap.matchMedia();
 
-      gsap.set(description, {
-        y: 25,
-        opacity: 0,
-      });
+      // =====================================================
+      // DESKTOP
+      // =====================================================
 
-      gsap.set(cards, {
-        y: 80,
-        opacity: 0,
-      });
+      mm.add("(min-width: 768px)", () => {
+        // ========================================
+        // INITIAL STATES
+        // ========================================
 
-      gsap.set(avatars, {
-        y: -30,
-        scale: 0.85,
-        opacity: 0,
-      });
+        gsap.set(eyebrow, {
+          y: 25,
+          opacity: 0,
+        });
 
-      gsap.set(stars, {
-        y: 15,
-        opacity: 0,
-      });
+        gsap.set(heading, {
+          y: 45,
+          opacity: 0,
+        });
 
-      gsap.set(reviewTitles, {
-        y: 20,
-        opacity: 0,
-      });
+        gsap.set(description, {
+          y: 25,
+          opacity: 0,
+        });
 
-      gsap.set(reviewContents, {
-        y: 20,
-        opacity: 0,
-      });
+        gsap.set(cards, {
+          y: 80,
+          opacity: 0,
+        });
 
-      gsap.set(reviewerNames, {
-        y: 15,
-        opacity: 0,
-      });
+        gsap.set(avatars, {
+          y: -30,
+          scale: 0.85,
+          opacity: 0,
+        });
 
-      gsap.set(reviewerRoles, {
-        y: 12,
-        opacity: 0,
-      });
+        gsap.set(stars, {
+          y: 15,
+          opacity: 0,
+        });
 
-      gsap.set(metrics, {
-        y: 35,
-        opacity: 0,
-      });
+        gsap.set(reviewTitles, {
+          y: 20,
+          opacity: 0,
+        });
 
-      // ========================================
-      // SCROLL-DRIVEN TIMELINE
-      // ========================================
+        gsap.set(reviewContents, {
+          y: 20,
+          opacity: 0,
+        });
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top 85%",
-          end: "bottom 60%",
-          scrub: 1.2,
-        },
-      });
+        gsap.set(reviewerNames, {
+          y: 15,
+          opacity: 0,
+        });
 
-      // ========================================
-      // HEADER
-      // ========================================
+        gsap.set(reviewerRoles, {
+          y: 12,
+          opacity: 0,
+        });
 
-      tl.to(eyebrow, {
-        y: 0,
-        opacity: 1,
-        duration: 0.45,
-        ease: "power3.out",
-      });
+        gsap.set(metrics, {
+          y: 35,
+          opacity: 0,
+        });
 
-      tl.to(
-        heading,
-        {
+        // ========================================
+        // SCROLL-DRIVEN TIMELINE
+        // ========================================
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 85%",
+            end: "bottom 60%",
+            scrub: 1.2,
+          },
+        });
+
+        // ========================================
+        // HEADER
+        // ========================================
+
+        tl.to(eyebrow, {
           y: 0,
           opacity: 1,
-          duration: 0.75,
+          duration: 0.45,
           ease: "power3.out",
-        },
-        "-=0.2"
-      );
-
-      tl.to(
-        description,
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.5,
-          ease: "power3.out",
-        },
-        "-=0.3"
-      );
-
-      // ========================================
-      // REVIEW CARDS
-      // ========================================
-
-      tl.to(
-        cards,
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1.1,
-          stagger: 0.18,
-          ease: "power3.out",
-        },
-        "-=0.1"
-      );
-
-      // ========================================
-      // AVATARS
-      // ========================================
-
-      tl.to(
-        avatars,
-        {
-          y: 0,
-          scale: 1,
-          opacity: 1,
-          duration: 0.8,
-          stagger: 0.18,
-          ease: "power2.out",
-        },
-        "-=0.9"
-      );
-
-      // ========================================
-      // STARS
-      // ========================================
-
-      stars.forEach((starGroup, index) => {
-        const starItems = starGroup.querySelectorAll("svg");
+        });
 
         tl.to(
-          starGroup,
+          heading,
           {
             y: 0,
             opacity: 1,
-            duration: 0.35,
-            ease: "power2.out",
+            duration: 0.75,
+            ease: "power3.out",
           },
-          index === 0 ? "-=0.5" : "-=0.25"
+          "-=0.2"
         );
 
-        tl.from(
-          starItems,
+        tl.to(
+          description,
           {
-            scale: 0.6,
-            opacity: 0,
-            duration: 0.3,
-            stagger: 0.035,
-            ease: "back.out(1.7)",
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+            ease: "power3.out",
           },
-          "<"
+          "-=0.3"
+        );
+
+        // ========================================
+        // REVIEW CARDS
+        // ========================================
+
+        tl.to(
+          cards,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1.1,
+            stagger: 0.18,
+            ease: "power3.out",
+          },
+          "-=0.1"
+        );
+
+        // ========================================
+        // AVATARS
+        // ========================================
+
+        tl.to(
+          avatars,
+          {
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            duration: 0.8,
+            stagger: 0.18,
+            ease: "power2.out",
+          },
+          "-=0.9"
+        );
+
+        // ========================================
+        // STARS
+        // ========================================
+
+        stars.forEach((starGroup, index) => {
+          const starItems = starGroup.querySelectorAll("svg");
+
+          tl.to(
+            starGroup,
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.35,
+              ease: "power2.out",
+            },
+            index === 0 ? "-=0.5" : "-=0.25"
+          );
+
+          tl.from(
+            starItems,
+            {
+              scale: 0.6,
+              opacity: 0,
+              duration: 0.3,
+              stagger: 0.035,
+              ease: "back.out(1.7)",
+            },
+            "<"
+          );
+        });
+
+        // ========================================
+        // REVIEW TITLES
+        // ========================================
+
+        tl.to(
+          reviewTitles,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.65,
+            stagger: 0.15,
+            ease: "power3.out",
+          },
+          "-=0.4"
+        );
+
+        // ========================================
+        // REVIEW CONTENT
+        // ========================================
+
+        tl.to(
+          reviewContents,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.75,
+            stagger: 0.15,
+            ease: "power3.out",
+          },
+          "-=0.4"
+        );
+
+        // ========================================
+        // REVIEWER NAME
+        // ========================================
+
+        tl.to(
+          reviewerNames,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.5,
+            stagger: 0.12,
+            ease: "power3.out",
+          },
+          "-=0.45"
+        );
+
+        // ========================================
+        // REVIEWER ROLE
+        // ========================================
+
+        tl.to(
+          reviewerRoles,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.4,
+            stagger: 0.12,
+            ease: "power3.out",
+          },
+          "-=0.3"
+        );
+
+        // ========================================
+        // FOOTER METRICS
+        // ========================================
+
+        tl.to(
+          metrics,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            stagger: 0.15,
+            ease: "power3.out",
+          },
+          "-=0.1"
         );
       });
 
-      // ========================================
-      // REVIEW TITLES
-      // ========================================
+      // =====================================================
+      // MOBILE
+      // =====================================================
 
-      tl.to(
-        reviewTitles,
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.65,
-          stagger: 0.15,
-          ease: "power3.out",
-        },
-        "-=0.4"
-      );
+      mm.add("(max-width: 767px)", () => {
+        // ========================================
+        // MOBILE INITIAL STATES
+        // ========================================
 
-      // ========================================
-      // REVIEW CONTENT
-      // ========================================
+        // Each complete review item appears as one unit.
+        // Avatar + card animate together.
 
-      tl.to(
-        reviewContents,
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.75,
-          stagger: 0.15,
-          ease: "power3.out",
-        },
-        "-=0.4"
-      );
+        gsap.set(reviewItems, {
+          y: 70,
+          opacity: 0,
+        });
 
-      // ========================================
-      // REVIEWER NAME
-      // ========================================
+        gsap.set(eyebrow, {
+          y: 20,
+          opacity: 0,
+        });
 
-      tl.to(
-        reviewerNames,
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.5,
-          stagger: 0.12,
-          ease: "power3.out",
-        },
-        "-=0.45"
-      );
+        gsap.set(heading, {
+          y: 35,
+          opacity: 0,
+        });
 
-      // ========================================
-      // REVIEWER ROLE
-      // ========================================
+        gsap.set(description, {
+          y: 20,
+          opacity: 0,
+        });
 
-      tl.to(
-        reviewerRoles,
-        {
+        gsap.set(metrics, {
+          y: 30,
+          opacity: 0,
+        });
+
+        // ========================================
+        // MOBILE SCROLL TIMELINE
+        // ========================================
+
+        const mobileTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 85%",
+            end: "bottom 65%",
+            scrub: 1.2,
+          },
+        });
+
+        // ========================================
+        // HEADER
+        // ========================================
+
+        mobileTl.to(eyebrow, {
           y: 0,
           opacity: 1,
           duration: 0.4,
-          stagger: 0.12,
           ease: "power3.out",
-        },
-        "-=0.3"
-      );
+        });
 
-      // ========================================
-      // FOOTER METRICS
-      // ========================================
+        mobileTl.to(
+          heading,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.65,
+            ease: "power3.out",
+          },
+          "-=0.15"
+        );
 
-      tl.to(
-        metrics,
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.7,
-          stagger: 0.15,
-          ease: "power3.out",
-        },
-        "-=0.1"
-      );
+        mobileTl.to(
+          description,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.45,
+            ease: "power3.out",
+          },
+          "-=0.2"
+        );
 
-      // ========================================
+        // ========================================
+        // CARD 01
+        // ========================================
+
+        mobileTl.to(
+          reviewItems[0],
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.9,
+            ease: "power3.out",
+          },
+          "+=0.05"
+        );
+
+        // ========================================
+        // CARD 02
+        // ========================================
+
+        mobileTl.to(
+          reviewItems[1],
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.9,
+            ease: "power3.out",
+          },
+          "+=0.15"
+        );
+
+        // ========================================
+        // CARD 03
+        // ========================================
+
+        mobileTl.to(
+          reviewItems[2],
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.9,
+            ease: "power3.out",
+          },
+          "+=0.15"
+        );
+
+        // ========================================
+        // FOOTER METRICS
+        // ========================================
+
+        mobileTl.to(
+          metrics,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            stagger: 0.12,
+            ease: "power3.out",
+          },
+          "+=0.1"
+        );
+      });
+
+      // =====================================================
       // CARD HOVER
-      // ========================================
+      // =====================================================
 
       cards.forEach((card) => {
         const enter = () => {
@@ -365,6 +538,8 @@ export const Reviews: React.FC = () => {
         card.addEventListener("mouseenter", enter);
         card.addEventListener("mouseleave", leave);
       });
+
+      return () => mm.revert();
     },
     {
       scope: sectionRef,
@@ -378,7 +553,6 @@ export const Reviews: React.FC = () => {
       id="trust"
     >
       <div className="mx-auto max-w-7xl px-6">
-
         {/* ========================================
             HEADER
         ======================================== */}
@@ -408,9 +582,11 @@ export const Reviews: React.FC = () => {
           {reviewsData.map((item, idx) => (
             <div
               key={idx}
-              className="relative pt-16"
+              className="review-item relative pt-16"
             >
-              {/* PROFILE IMAGE */}
+              {/* ========================================
+                  PROFILE IMAGE
+              ======================================== */}
 
               <div
                 className="
@@ -445,7 +621,9 @@ export const Reviews: React.FC = () => {
                 </div>
               </div>
 
-              {/* CARD */}
+              {/* ========================================
+                  CARD
+              ======================================== */}
 
               <div
                 className="
@@ -462,7 +640,6 @@ export const Reviews: React.FC = () => {
                 "
               >
                 <div>
-
                   {/* STAR RATING */}
 
                   <div
@@ -528,13 +705,13 @@ export const Reviews: React.FC = () => {
         <div
           className="
             grid
-            grid-cols-1
-            gap-8
+            grid-cols-3
+            gap-3
             border-t
             border-[color-mix(in_srgb,#C6D0D9_30%,transparent)]
             pt-8
             text-center
-            md:grid-cols-3
+            md:gap-8
           "
         >
           <div className="review-metric">
@@ -567,7 +744,6 @@ export const Reviews: React.FC = () => {
             </div>
           </div>
         </div>
-
       </div>
     </section>
   );

@@ -196,7 +196,6 @@ export default function Header() {
 
         {/* ========================================
             Desktop CTA
-            Matches Hero Primary CTA
             ======================================== */}
 
         <button
@@ -283,17 +282,21 @@ export default function Header() {
               Navigation Links
               ---------------------------------------- */}
 
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-1">
             {navLinks.map((link) => (
               <a
                 key={link.label}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
                 className="
-                  header-link
-                  border-b
-                  border-[var(--border)]
-                  py-4
+                  py-3
+                  text-[15px]
+                  font-medium
+                  text-[var(--primary)]
+                  no-underline
+                  transition-opacity
+                  duration-200
+                  hover:opacity-60
                 "
               >
                 {link.label}
@@ -303,7 +306,6 @@ export default function Header() {
 
           {/* ----------------------------------------
               Mobile CTA
-              Matches Hero Primary CTA
               ---------------------------------------- */}
 
           <button

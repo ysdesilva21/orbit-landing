@@ -73,7 +73,9 @@ export const HowItWorksSection: React.FC = () => {
         !stepThree ||
         !numberOne ||
         !numberTwo ||
-        !numberThree
+        !numberThree ||
+        !mobileLineOne ||
+        !mobileLineTwo
       ) {
         return;
       }
@@ -99,14 +101,12 @@ export const HowItWorksSection: React.FC = () => {
           transformOrigin: "left center",
         });
 
-        // All steps begin hidden
         gsap.set([stepOne, stepTwo, stepThree], {
           opacity: 0,
           scale: 0.96,
           transformOrigin: "center top",
         });
 
-        // All numbers begin white
         gsap.set([numberOne, numberTwo, numberThree], {
           backgroundColor: "white",
           color: "var(--accent)",
@@ -127,7 +127,7 @@ export const HowItWorksSection: React.FC = () => {
         });
 
         // =============================================
-        // STEP 01 APPEARS
+        // STEP 01
         // =============================================
 
         tl.to(stepOne, {
@@ -137,7 +137,6 @@ export const HowItWorksSection: React.FC = () => {
           ease: "power2.out",
         });
 
-        // 01 becomes accent-filled
         tl.to(
           numberOne,
           {
@@ -161,7 +160,7 @@ export const HowItWorksSection: React.FC = () => {
         });
 
         // =============================================
-        // STEP 02 APPEARS
+        // STEP 02
         // =============================================
 
         tl.to(stepTwo, {
@@ -194,7 +193,7 @@ export const HowItWorksSection: React.FC = () => {
         });
 
         // =============================================
-        // STEP 03 APPEARS
+        // STEP 03
         // =============================================
 
         tl.to(stepThree, {
@@ -222,21 +221,111 @@ export const HowItWorksSection: React.FC = () => {
       // =====================================================
 
       mm.add("(max-width: 767px)", () => {
-        if (!mobileLineOne || !mobileLineTwo) return;
+        // ---------------------------------------------
+        // Calculate actual positions
+        // ---------------------------------------------
+
+        const mobileTimeline = timeline as HTMLElement;
+        const mobileNumberOne = numberOne as HTMLElement;
+        const mobileNumberTwo = numberTwo as HTMLElement;
+        const mobileNumberThree = numberThree as HTMLElement;
+
+        const calculateLinePositions = () => {
+          const timelineRect =
+            mobileTimeline.getBoundingClientRect();
+
+          const numberOneRect =
+            mobileNumberOne.getBoundingClientRect();
+
+          const numberTwoRect =
+            mobileNumberTwo.getBoundingClientRect();
+
+          const numberThreeRect =
+            mobileNumberThree.getBoundingClientRect();
+
+          const numberOneCenter =
+            numberOneRect.top +
+            numberOneRect.height / 2 -
+            timelineRect.top;
+
+          const numberTwoCenter =
+            numberTwoRect.top +
+            numberTwoRect.height / 2 -
+            timelineRect.top;
+
+          const numberThreeCenter =
+            numberThreeRect.top +
+            numberThreeRect.height / 2 -
+            timelineRect.top;
+
+          return {
+            first: numberOneCenter,
+            second: numberTwoCenter,
+            third: numberThreeCenter,
+          };
+        };
+
+        // ---------------------------------------------
+        // Position the mobile line container
+        // ---------------------------------------------
+
+        const updateMobileLines = () => {
+          const positions = calculateLinePositions();
+
+          const lineContainer =
+            mobileLineOne.parentElement as HTMLElement;
+
+          if (!lineContainer) return;
+
+          const containerTop = 28;
+
+          const lineOneHeight =
+            positions.second - positions.first;
+
+          const lineTwoHeight =
+            positions.third - positions.second;
+
+          // Move the base line to the first number center
+          gsap.set(lineContainer, {
+            top: `${positions.first}px`,
+            bottom: "auto",
+            height: `${positions.third - positions.first}px`,
+          });
+
+          // First accent line
+          gsap.set(mobileLineOne, {
+            top: 0,
+            height: `${lineOneHeight}px`,
+            scaleY: 0,
+            transformOrigin: "top center",
+          });
+
+          // Second accent line
+          gsap.set(mobileLineTwo, {
+            top: `${lineOneHeight}px`,
+            height: `${lineTwoHeight}px`,
+            scaleY: 0,
+            transformOrigin: "top center",
+          });
+
+          // Keep the container visually aligned
+          lineContainer.style.left = `${containerTop - 4}px`;
+        };
+
+        // Calculate after layout has settled
+        updateMobileLines();
+
+        // Recalculate if viewport changes
+        const resizeHandler = () => {
+          updateMobileLines();
+          ScrollTrigger.refresh();
+        };
+
+        window.addEventListener("resize", resizeHandler);
 
         // ---------------------------------------------
         // Initial states
         // ---------------------------------------------
-
-        gsap.set(mobileLineOne, {
-          scaleY: 0,
-          transformOrigin: "top center",
-        });
-
-        gsap.set(mobileLineTwo, {
-          scaleY: 0,
-          transformOrigin: "top center",
-        });
 
         gsap.set([stepOne, stepTwo, stepThree], {
           opacity: 0,
@@ -260,10 +349,15 @@ export const HowItWorksSection: React.FC = () => {
             start: "top 78%",
             end: "bottom 65%",
             scrub: 1,
+            invalidateOnRefresh: true,
+            onRefresh: updateMobileLines,
           },
         });
 
+        // =============================================
         // STEP 01
+        // =============================================
+
         tl.to(stepOne, {
           opacity: 1,
           scale: 1,
@@ -283,14 +377,20 @@ export const HowItWorksSection: React.FC = () => {
           "<"
         );
 
+        // =============================================
         // LINE 01 → 02
+        // =============================================
+
         tl.to(mobileLineOne, {
           scaleY: 1,
           duration: 1,
           ease: "none",
         });
 
+        // =============================================
         // STEP 02
+        // =============================================
+
         tl.to(stepTwo, {
           opacity: 1,
           scale: 1,
@@ -310,14 +410,20 @@ export const HowItWorksSection: React.FC = () => {
           "<"
         );
 
+        // =============================================
         // LINE 02 → 03
+        // =============================================
+
         tl.to(mobileLineTwo, {
           scaleY: 1,
           duration: 1,
           ease: "none",
         });
 
+        // =============================================
         // STEP 03
+        // =============================================
+
         tl.to(stepThree, {
           opacity: 1,
           scale: 1,
@@ -336,6 +442,17 @@ export const HowItWorksSection: React.FC = () => {
           },
           "<"
         );
+
+        // ---------------------------------------------
+        // Cleanup
+        // ---------------------------------------------
+
+        return () => {
+          window.removeEventListener(
+            "resize",
+            resizeHandler
+          );
+        };
       });
 
       return () => mm.revert();
@@ -352,7 +469,10 @@ export const HowItWorksSection: React.FC = () => {
       id="solutions"
     >
       <div className="max-w-6xl mx-auto space-y-12">
-        {/* Section Header */}
+        {/* =====================================================
+            SECTION HEADER
+            ===================================================== */}
+
         <div className="space-y-4">
           <span className="text-eyebrow">
             How It Works
@@ -367,11 +487,14 @@ export const HowItWorksSection: React.FC = () => {
           </h2>
         </div>
 
-        {/* Timeline */}
+        {/* =====================================================
+            TIMELINE
+            ===================================================== */}
+
         <div className="how-it-works-timeline relative pt-4">
-          {/* =========================================
+          {/* =================================================
               DESKTOP CONNECTING LINES
-              ========================================= */}
+              ================================================= */}
 
           <div className="hidden md:block absolute top-[29px] left-[24px] right-[24px] h-px">
             {/* 01 → 02 */}
@@ -385,27 +508,33 @@ export const HowItWorksSection: React.FC = () => {
             </div>
           </div>
 
-          {/* =========================================
+          {/* =================================================
               MOBILE CONNECTING LINES
-              ========================================= */}
+              ================================================= */}
 
-          <div className="md:hidden absolute left-[24px] top-[28px] bottom-[28px] w-px">
+          <div className="md:hidden absolute left-[24px] top-[28px] w-px">
             {/* Base line */}
+
             <div className="absolute left-0 top-0 w-px h-full bg-[color-mix(in_srgb,var(--primary)_12%,transparent)]" />
 
             {/* 01 → 02 */}
-            <div className="timeline-mobile-line-one absolute left-0 top-0 w-px h-[33.33%] bg-[var(--accent)]" />
+
+            <div className="timeline-mobile-line-one absolute left-0 top-0 w-px bg-[var(--accent)]" />
 
             {/* 02 → 03 */}
-            <div className="timeline-mobile-line-two absolute left-0 top-[33.33%] w-px h-[33.33%] bg-[var(--accent)]" />
+
+            <div className="timeline-mobile-line-two absolute left-0 w-px bg-[var(--accent)]" />
           </div>
 
-          {/* =========================================
+          {/* =================================================
               STEPS
-              ========================================= */}
+              ================================================= */}
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-10 relative z-10">
-            {/* STEP 01 */}
+            {/* =================================================
+                STEP 01
+                ================================================= */}
+
             <div className="timeline-step-one flex flex-col gap-6">
               <div className="flex items-center">
                 <div
@@ -428,7 +557,8 @@ export const HowItWorksSection: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3">
+              {/* Mobile text padding keeps text away from line */}
+              <div className="flex flex-col gap-3 pl-12 md:pl-0">
                 <span className="text-small text-[var(--accent)]">
                   Connect
                 </span>
@@ -446,7 +576,10 @@ export const HowItWorksSection: React.FC = () => {
               </div>
             </div>
 
-            {/* STEP 02 */}
+            {/* =================================================
+                STEP 02
+                ================================================= */}
+
             <div className="timeline-step-two flex flex-col gap-6">
               <div className="flex items-center">
                 <div
@@ -466,7 +599,8 @@ export const HowItWorksSection: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3">
+              {/* Mobile text padding keeps text away from line */}
+              <div className="flex flex-col gap-3 pl-12 md:pl-0">
                 <span className="text-small text-[var(--accent)]">
                   Understand
                 </span>
@@ -483,7 +617,10 @@ export const HowItWorksSection: React.FC = () => {
               </div>
             </div>
 
-            {/* STEP 03 */}
+            {/* =================================================
+                STEP 03
+                ================================================= */}
+
             <div className="timeline-step-three flex flex-col gap-6">
               <div className="flex items-center">
                 <div
@@ -503,7 +640,8 @@ export const HowItWorksSection: React.FC = () => {
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3">
+              {/* Mobile text padding keeps text away from line */}
+              <div className="flex flex-col gap-3 pl-12 md:pl-0">
                 <span className="text-small text-[var(--secondary)]">
                   Act
                 </span>

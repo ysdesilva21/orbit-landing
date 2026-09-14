@@ -14,7 +14,6 @@ export const Pricing: React.FC = () => {
   const sectionRef = useRef<HTMLElement | null>(null);
   const headerRef = useRef<HTMLDivElement | null>(null);
   const pricingCardsRef = useRef<HTMLDivElement | null>(null);
-  const metricsRef = useRef<HTMLDivElement | null>(null);
 
   const billingToggleRef = useRef<HTMLDivElement | null>(null);
 
@@ -42,7 +41,6 @@ export const Pricing: React.FC = () => {
     () => {
       const section = sectionRef.current;
       const header = headerRef.current;
-      const metrics = metricsRef.current;
       const billingToggle = billingToggleRef.current;
       const starterCard = starterCardRef.current;
       const growthCard = growthCardRef.current;
@@ -78,13 +76,6 @@ export const Pricing: React.FC = () => {
         (card): card is HTMLDivElement => card instanceof HTMLDivElement
       );
 
-      const metricItems: HTMLElement[] = metrics
-        ? Array.from(metrics.children).filter(
-            (element): element is HTMLElement =>
-              element instanceof HTMLElement
-          )
-        : [];
-
       /*
       ------------------------------------------------------------
       INITIAL STATES
@@ -116,13 +107,6 @@ export const Pricing: React.FC = () => {
       if (growthCard instanceof HTMLDivElement) {
         gsap.set(growthCard, {
           y: 58,
-          opacity: 0,
-        });
-      }
-
-      if (metricItems.length > 0) {
-        gsap.set(metricItems, {
-          y: 22,
           opacity: 0,
         });
       }
@@ -299,35 +283,6 @@ export const Pricing: React.FC = () => {
           "<"
         );
       }
-
-      /*
-      ------------------------------------------------------------
-      BOTTOM METRICS
-      ------------------------------------------------------------
-      */
-      if (metricItems.length > 0) {
-        tl.to(
-          metricItems,
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.55,
-            stagger: 0.1,
-            ease: "power3.out",
-          },
-          "-=0.25"
-        );
-
-        tl.to(
-          metricItems,
-          {
-            y: -10,
-            ease: "none",
-            stagger: 0.04,
-          },
-          ">"
-        );
-      }
     },
     {
       scope: sectionRef,
@@ -437,7 +392,7 @@ export const Pricing: React.FC = () => {
 
         <div
           ref={pricingCardsRef}
-          className="mb-20 grid grid-cols-1 items-stretch gap-6 md:grid-cols-3"
+          className="grid grid-cols-1 items-stretch gap-6 md:grid-cols-3"
         >
           {/* STARTER */}
           <div
@@ -604,39 +559,6 @@ export const Pricing: React.FC = () => {
                   </li>
                 ))}
               </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* METRICS */}
-        <div
-          ref={metricsRef}
-          className="grid grid-cols-1 gap-8 border-t border-[color-mix(in_srgb,#C6D0D9_30%,transparent)] pt-8 text-center md:grid-cols-3"
-        >
-          <div className="will-change-transform">
-            <div className="text-metric text-[var(--accent)]">
-              14,000+
-            </div>
-            <div className="text-small mt-1">
-              teams
-            </div>
-          </div>
-
-          <div className="will-change-transform">
-            <div className="text-metric text-[var(--accent)]">
-              45M+
-            </div>
-            <div className="text-small mt-1">
-              data points analyzed
-            </div>
-          </div>
-
-          <div className="will-change-transform">
-            <div className="text-metric text-[var(--accent)]">
-              99.9%
-            </div>
-            <div className="text-small mt-1">
-              uptime
             </div>
           </div>
         </div>
