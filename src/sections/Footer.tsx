@@ -1,10 +1,15 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import {
   MessageCircle,
   Sparkles,
   Search,
   Code2,
 } from 'lucide-react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import logo from '../assets/logos/orbit-logo.png';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const InstagramIcon = ({ size = 17 }: { size?: number }) => (
   <svg
@@ -33,24 +38,163 @@ const XIcon = ({ size = 15 }: { size?: number }) => (
 );
 
 export const Footer: React.FC = () => {
+  const footerRef = useRef<HTMLElement | null>(null);
+
+  const brandRef = useRef<HTMLDivElement | null>(null);
+  const linksRef = useRef<HTMLDivElement | null>(null);
+  const bottomBarRef = useRef<HTMLDivElement | null>(null);
+
+  const linkColumnsRef = useRef<(HTMLDivElement | null)[]>([]);
+
+  useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const prefersReducedMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+
+      if (prefersReducedMotion) {
+        return;
+      }
+
+      /*
+      ========================================================
+      INITIAL STATES
+      ========================================================
+      */
+
+      gsap.set(brandRef.current, {
+        opacity: 0,
+        y: 25,
+      });
+
+      gsap.set(linkColumnsRef.current, {
+        opacity: 0,
+        y: 25,
+      });
+
+      gsap.set(bottomBarRef.current, {
+        opacity: 0,
+        y: 15,
+      });
+
+      /*
+      ========================================================
+      SCROLL TRIGGER
+      ========================================================
+
+      Normal trigger animation.
+      Not scrubbed.
+      Not reversible.
+      Plays when footer enters the viewport.
+      ========================================================
+      */
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: footerRef.current,
+          start: 'top 88%',
+          toggleActions: 'play none none none',
+        },
+        defaults: {
+          ease: 'power3.out',
+        },
+      });
+
+      /*
+      --------------------------------------------------------
+      Brand
+      --------------------------------------------------------
+      */
+
+      tl.to(brandRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.75,
+      });
+
+      /*
+      --------------------------------------------------------
+      Link columns
+      --------------------------------------------------------
+      */
+
+      tl.to(
+        linkColumnsRef.current,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.65,
+          stagger: 0.07,
+        },
+        '-=0.5'
+      );
+
+      /*
+      --------------------------------------------------------
+      Bottom bar
+      --------------------------------------------------------
+      */
+
+      tl.to(
+        bottomBarRef.current,
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.55,
+        },
+        '-=0.35'
+      );
+    }, footerRef);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <footer className="bg-linear-to-b from-[#EDE8F7] to-[#B29EF0] pt-16 pb-12 text-[#221C38]">
+    <footer
+      ref={footerRef}
+      className="
+        bg-linear-to-b
+        from-[#EDE8F7]
+        to-[#B29EF0]
+        pt-16
+        pb-12
+        text-[#221C38]
+      "
+    >
       <div className="mx-auto max-w-7xl px-6">
 
-        {/* Main Footer */}
+        {/* ==================================================
+            MAIN FOOTER
+        ================================================== */}
+
         <div className="mb-20 grid grid-cols-1 gap-10 md:grid-cols-12">
 
-          {/* Brand Column */}
-          <div className="space-y-6 md:col-span-5">
+          {/* ==================================================
+              BRAND COLUMN
+          ================================================== */}
 
+          <div
+            ref={brandRef}
+            className="space-y-6 md:col-span-5"
+          >
             {/* Logo */}
+
             <a
               href="/"
-              className="flex w-fit items-center gap-2.5 no-underline transition-opacity duration-200 hover:opacity-80"
+              className="
+                flex
+                w-fit
+                items-center
+                gap-2.5
+                no-underline
+                transition-opacity
+                duration-200
+                hover:opacity-80
+              "
               aria-label="Orbit home"
             >
               <img
-                src="/orbit-logo.png"
+                src={logo}
                 alt="Orbit"
                 className="block h-9 w-9 object-contain"
               />
@@ -69,18 +213,38 @@ export const Footer: React.FC = () => {
             </a>
 
             {/* Brand Statement */}
+
             <h3 className="max-w-xs text-third-heading">
               Turn your business data into decisions.
             </h3>
 
-            {/* Social Links */}
+            {/* ==================================================
+                SOCIAL LINKS
+            ================================================== */}
+
             <div className="flex items-center gap-3">
 
               {/* LinkedIn */}
+
               <a
                 href="#"
                 aria-label="Orbit on LinkedIn"
-                className="flex h-9 w-9 items-center justify-center rounded-[5px] border border-slate-200 bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                className="
+                  flex
+                  h-9
+                  w-9
+                  items-center
+                  justify-center
+                  rounded-[5px]
+                  border
+                  border-slate-200
+                  bg-slate-100
+                  shadow-sm
+                  transition-all
+                  duration-200
+                  hover:-translate-y-0.5
+                  hover:shadow-md
+                "
               >
                 <span className="text-sm font-bold leading-none">
                   in
@@ -88,26 +252,60 @@ export const Footer: React.FC = () => {
               </a>
 
               {/* X */}
+
               <a
                 href="#"
                 aria-label="Orbit on X"
-                className="flex h-9 w-9 items-center justify-center rounded-[5px] border border-slate-200 bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                className="
+                  flex
+                  h-9
+                  w-9
+                  items-center
+                  justify-center
+                  rounded-[5px]
+                  border
+                  border-slate-200
+                  bg-slate-100
+                  shadow-sm
+                  transition-all
+                  duration-200
+                  hover:-translate-y-0.5
+                  hover:shadow-md
+                "
               >
                 <XIcon />
               </a>
 
               {/* Instagram */}
+
               <a
                 href="#"
                 aria-label="Orbit on Instagram"
-                className="flex h-9 w-9 items-center justify-center rounded-[5px] border border-slate-200 bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+                className="
+                  flex
+                  h-9
+                  w-9
+                  items-center
+                  justify-center
+                  rounded-[5px]
+                  border
+                  border-slate-200
+                  bg-slate-100
+                  shadow-sm
+                  transition-all
+                  duration-200
+                  hover:-translate-y-0.5
+                  hover:shadow-md
+                "
               >
                 <InstagramIcon />
               </a>
-
             </div>
 
-            {/* AI Tools */}
+            {/* ==================================================
+                AI TOOLS
+            ================================================== */}
+
             <div className="space-y-3 pt-2">
 
               <p className="text-eyebrow">
@@ -117,7 +315,25 @@ export const Footer: React.FC = () => {
               <div className="flex items-center gap-2">
 
                 {/* ChatGPT */}
-                <div className="flex h-9 w-9 items-center justify-center rounded-[5px] border border-slate-200 bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+
+                <div
+                  className="
+                    flex
+                    h-9
+                    w-9
+                    items-center
+                    justify-center
+                    rounded-[5px]
+                    border
+                    border-slate-200
+                    bg-slate-100
+                    shadow-sm
+                    transition-all
+                    duration-200
+                    hover:-translate-y-0.5
+                    hover:shadow-md
+                  "
+                >
                   <MessageCircle
                     size={15}
                     strokeWidth={2}
@@ -125,7 +341,25 @@ export const Footer: React.FC = () => {
                 </div>
 
                 {/* Claude */}
-                <div className="flex h-9 w-9 items-center justify-center rounded-[5px] border border-slate-200 bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+
+                <div
+                  className="
+                    flex
+                    h-9
+                    w-9
+                    items-center
+                    justify-center
+                    rounded-[5px]
+                    border
+                    border-slate-200
+                    bg-slate-100
+                    shadow-sm
+                    transition-all
+                    duration-200
+                    hover:-translate-y-0.5
+                    hover:shadow-md
+                  "
+                >
                   <Sparkles
                     size={15}
                     strokeWidth={2}
@@ -133,14 +367,50 @@ export const Footer: React.FC = () => {
                 </div>
 
                 {/* Gemini */}
-                <div className="flex h-9 w-9 items-center justify-center rounded-[5px] border border-slate-200 bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+
+                <div
+                  className="
+                    flex
+                    h-9
+                    w-9
+                    items-center
+                    justify-center
+                    rounded-[5px]
+                    border
+                    border-slate-200
+                    bg-slate-100
+                    shadow-sm
+                    transition-all
+                    duration-200
+                    hover:-translate-y-0.5
+                    hover:shadow-md
+                  "
+                >
                   <span className="text-sm font-bold leading-none">
                     ✦
                   </span>
                 </div>
 
                 {/* Perplexity */}
-                <div className="flex h-9 w-9 items-center justify-center rounded-[5px] border border-slate-200 bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+
+                <div
+                  className="
+                    flex
+                    h-9
+                    w-9
+                    items-center
+                    justify-center
+                    rounded-[5px]
+                    border
+                    border-slate-200
+                    bg-slate-100
+                    shadow-sm
+                    transition-all
+                    duration-200
+                    hover:-translate-y-0.5
+                    hover:shadow-md
+                  "
+                >
                   <Search
                     size={15}
                     strokeWidth={2}
@@ -148,7 +418,25 @@ export const Footer: React.FC = () => {
                 </div>
 
                 {/* Cursor */}
-                <div className="flex h-9 w-9 items-center justify-center rounded-[5px] border border-slate-200 bg-slate-100 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md">
+
+                <div
+                  className="
+                    flex
+                    h-9
+                    w-9
+                    items-center
+                    justify-center
+                    rounded-[5px]
+                    border
+                    border-slate-200
+                    bg-slate-100
+                    shadow-sm
+                    transition-all
+                    duration-200
+                    hover:-translate-y-0.5
+                    hover:shadow-md
+                  "
+                >
                   <Code2
                     size={15}
                     strokeWidth={2}
@@ -157,14 +445,29 @@ export const Footer: React.FC = () => {
 
               </div>
             </div>
-
           </div>
 
-          {/* Links Columns */}
-          <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 md:col-span-7">
+          {/* ==================================================
+              LINK COLUMNS
+          ================================================== */}
 
+          <div
+            ref={linksRef}
+            className="
+              grid
+              grid-cols-2
+              gap-8
+              sm:grid-cols-4
+              md:col-span-7
+            "
+          >
             {/* Product */}
-            <div>
+
+            <div
+              ref={(element) => {
+                linkColumnsRef.current[0] = element;
+              }}
+            >
               <h4 className="mb-10 text-third-heading">
                 Product
               </h4>
@@ -175,25 +478,21 @@ export const Footer: React.FC = () => {
                     Overview
                   </a>
                 </li>
-
                 <li>
                   <a href="#" className="transition hover:text-black">
                     AI insights
                   </a>
                 </li>
-
                 <li>
                   <a href="#" className="transition hover:text-black">
                     Integrations
                   </a>
                 </li>
-
                 <li>
                   <a href="#" className="transition hover:text-black">
                     Pricing
                   </a>
                 </li>
-
                 <li>
                   <a href="#" className="transition hover:text-black">
                     Changelog
@@ -203,7 +502,12 @@ export const Footer: React.FC = () => {
             </div>
 
             {/* Company */}
-            <div>
+
+            <div
+              ref={(element) => {
+                linkColumnsRef.current[1] = element;
+              }}
+            >
               <h4 className="mb-10 text-third-heading">
                 Company
               </h4>
@@ -214,19 +518,16 @@ export const Footer: React.FC = () => {
                     About
                   </a>
                 </li>
-
                 <li>
                   <a href="#" className="transition hover:text-black">
                     Careers
                   </a>
                 </li>
-
                 <li>
                   <a href="#" className="transition hover:text-black">
                     Blog
                   </a>
                 </li>
-
                 <li>
                   <a href="#" className="transition hover:text-black">
                     Press
@@ -236,7 +537,12 @@ export const Footer: React.FC = () => {
             </div>
 
             {/* Resources */}
-            <div>
+
+            <div
+              ref={(element) => {
+                linkColumnsRef.current[2] = element;
+              }}
+            >
               <h4 className="mb-10 text-third-heading">
                 Resources
               </h4>
@@ -247,19 +553,16 @@ export const Footer: React.FC = () => {
                     Documentation
                   </a>
                 </li>
-
                 <li>
                   <a href="#" className="transition hover:text-black">
                     API reference
                   </a>
                 </li>
-
                 <li>
                   <a href="#" className="transition hover:text-black">
                     Guides
                   </a>
                 </li>
-
                 <li>
                   <a href="#" className="transition hover:text-black">
                     Community
@@ -269,7 +572,12 @@ export const Footer: React.FC = () => {
             </div>
 
             {/* Legal */}
-            <div>
+
+            <div
+              ref={(element) => {
+                linkColumnsRef.current[3] = element;
+              }}
+            >
               <h4 className="mb-10 text-third-heading">
                 Legal
               </h4>
@@ -280,19 +588,16 @@ export const Footer: React.FC = () => {
                     Privacy
                   </a>
                 </li>
-
                 <li>
                   <a href="#" className="transition hover:text-black">
                     Terms
                   </a>
                 </li>
-
                 <li>
                   <a href="#" className="transition hover:text-black">
                     Security
                   </a>
                 </li>
-
                 <li>
                   <a href="#" className="transition hover:text-black">
                     DPA
@@ -300,13 +605,28 @@ export const Footer: React.FC = () => {
                 </li>
               </ul>
             </div>
-
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="flex flex-col items-center justify-between gap-4 border-t border-slate-300 pt-6 text-small sm:flex-row">
+        {/* ==================================================
+            BOTTOM BAR
+        ================================================== */}
 
+        <div
+          ref={bottomBarRef}
+          className="
+            flex
+            flex-col
+            items-center
+            justify-between
+            gap-4
+            border-t
+            border-slate-300
+            pt-6
+            text-small
+            sm:flex-row
+          "
+        >
           <div>
             © 2026 Orbit Technologies, Inc.
           </div>
@@ -314,9 +634,7 @@ export const Footer: React.FC = () => {
           <div>
             Built for teams who trust their numbers.
           </div>
-
         </div>
-
       </div>
     </footer>
   );

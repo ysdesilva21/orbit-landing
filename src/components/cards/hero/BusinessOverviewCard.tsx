@@ -1,6 +1,8 @@
 import React from "react";
 
-export default function BusinessOverviewCard({ chartSrc = "/orbit-business-chart.png" }) {
+import chartSrc from "../../../assets/images/orbit-business-chart.png"
+
+export default function BusinessOverviewCard() {
   return (
     <div className="w-[440px] rounded-[10px] border border-[#EBE8F0] bg-white/95 px-4 py-2 shadow-lg backdrop-blur-sm">
       

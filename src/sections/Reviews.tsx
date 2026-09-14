@@ -1,4 +1,9 @@
-import React from "react";
+import React, { useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const reviewsData = [
   {
@@ -31,29 +36,373 @@ const reviewsData = [
 ];
 
 export const Reviews: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      const section = sectionRef.current;
+
+      if (!section) return;
+
+      // ========================================
+      // ELEMENTS
+      // ========================================
+
+      const eyebrow = section.querySelector(".reviews-eyebrow");
+      const heading = section.querySelector(".reviews-heading");
+      const description = section.querySelector(
+        ".reviews-description"
+      );
+
+      const cards = gsap.utils.toArray<HTMLElement>(
+        ".review-card"
+      );
+
+      const avatars = gsap.utils.toArray<HTMLElement>(
+        ".review-avatar"
+      );
+
+      const stars = gsap.utils.toArray<HTMLElement>(
+        ".review-stars"
+      );
+
+      const reviewTitles = gsap.utils.toArray<HTMLElement>(
+        ".review-title"
+      );
+
+      const reviewContents = gsap.utils.toArray<HTMLElement>(
+        ".review-content"
+      );
+
+      const reviewerNames = gsap.utils.toArray<HTMLElement>(
+        ".reviewer-name"
+      );
+
+      const reviewerRoles = gsap.utils.toArray<HTMLElement>(
+        ".reviewer-role"
+      );
+
+      const metrics = gsap.utils.toArray<HTMLElement>(
+        ".review-metric"
+      );
+
+      // ========================================
+      // INITIAL STATES
+      // ========================================
+
+      gsap.set(eyebrow, {
+        y: 25,
+        opacity: 0,
+      });
+
+      gsap.set(heading, {
+        y: 45,
+        opacity: 0,
+      });
+
+      gsap.set(description, {
+        y: 25,
+        opacity: 0,
+      });
+
+      gsap.set(cards, {
+        y: 80,
+        opacity: 0,
+      });
+
+      gsap.set(avatars, {
+        y: -30,
+        scale: 0.85,
+        opacity: 0,
+      });
+
+      gsap.set(stars, {
+        y: 15,
+        opacity: 0,
+      });
+
+      gsap.set(reviewTitles, {
+        y: 20,
+        opacity: 0,
+      });
+
+      gsap.set(reviewContents, {
+        y: 20,
+        opacity: 0,
+      });
+
+      gsap.set(reviewerNames, {
+        y: 15,
+        opacity: 0,
+      });
+
+      gsap.set(reviewerRoles, {
+        y: 12,
+        opacity: 0,
+      });
+
+      gsap.set(metrics, {
+        y: 35,
+        opacity: 0,
+      });
+
+      // ========================================
+      // SCROLL-DRIVEN TIMELINE
+      // ========================================
+
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: section,
+          start: "top 85%",
+          end: "bottom 60%",
+          scrub: 1.2,
+        },
+      });
+
+      // ========================================
+      // HEADER
+      // ========================================
+
+      tl.to(eyebrow, {
+        y: 0,
+        opacity: 1,
+        duration: 0.45,
+        ease: "power3.out",
+      });
+
+      tl.to(
+        heading,
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.75,
+          ease: "power3.out",
+        },
+        "-=0.2"
+      );
+
+      tl.to(
+        description,
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          ease: "power3.out",
+        },
+        "-=0.3"
+      );
+
+      // ========================================
+      // REVIEW CARDS
+      // ========================================
+
+      tl.to(
+        cards,
+        {
+          y: 0,
+          opacity: 1,
+          duration: 1.1,
+          stagger: 0.18,
+          ease: "power3.out",
+        },
+        "-=0.1"
+      );
+
+      // ========================================
+      // AVATARS
+      // ========================================
+
+      tl.to(
+        avatars,
+        {
+          y: 0,
+          scale: 1,
+          opacity: 1,
+          duration: 0.8,
+          stagger: 0.18,
+          ease: "power2.out",
+        },
+        "-=0.9"
+      );
+
+      // ========================================
+      // STARS
+      // ========================================
+
+      stars.forEach((starGroup, index) => {
+        const starItems = starGroup.querySelectorAll("svg");
+
+        tl.to(
+          starGroup,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.35,
+            ease: "power2.out",
+          },
+          index === 0 ? "-=0.5" : "-=0.25"
+        );
+
+        tl.from(
+          starItems,
+          {
+            scale: 0.6,
+            opacity: 0,
+            duration: 0.3,
+            stagger: 0.035,
+            ease: "back.out(1.7)",
+          },
+          "<"
+        );
+      });
+
+      // ========================================
+      // REVIEW TITLES
+      // ========================================
+
+      tl.to(
+        reviewTitles,
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.65,
+          stagger: 0.15,
+          ease: "power3.out",
+        },
+        "-=0.4"
+      );
+
+      // ========================================
+      // REVIEW CONTENT
+      // ========================================
+
+      tl.to(
+        reviewContents,
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.75,
+          stagger: 0.15,
+          ease: "power3.out",
+        },
+        "-=0.4"
+      );
+
+      // ========================================
+      // REVIEWER NAME
+      // ========================================
+
+      tl.to(
+        reviewerNames,
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.5,
+          stagger: 0.12,
+          ease: "power3.out",
+        },
+        "-=0.45"
+      );
+
+      // ========================================
+      // REVIEWER ROLE
+      // ========================================
+
+      tl.to(
+        reviewerRoles,
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.4,
+          stagger: 0.12,
+          ease: "power3.out",
+        },
+        "-=0.3"
+      );
+
+      // ========================================
+      // FOOTER METRICS
+      // ========================================
+
+      tl.to(
+        metrics,
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.7,
+          stagger: 0.15,
+          ease: "power3.out",
+        },
+        "-=0.1"
+      );
+
+      // ========================================
+      // CARD HOVER
+      // ========================================
+
+      cards.forEach((card) => {
+        const enter = () => {
+          gsap.to(card, {
+            y: -6,
+            duration: 0.35,
+            ease: "power2.out",
+            boxShadow:
+              "0 20px 45px rgba(45, 49, 50, 0.10)",
+            overwrite: "auto",
+          });
+        };
+
+        const leave = () => {
+          gsap.to(card, {
+            y: 0,
+            duration: 0.4,
+            ease: "power2.out",
+            boxShadow: "none",
+            overwrite: "auto",
+          });
+        };
+
+        card.addEventListener("mouseenter", enter);
+        card.addEventListener("mouseleave", leave);
+      });
+    },
+    {
+      scope: sectionRef,
+    }
+  );
+
   return (
-    <section className="bg-white py-20">
+    <section
+      ref={sectionRef}
+      className="bg-white py-20"
+    >
       <div className="mx-auto max-w-7xl px-6">
 
-        {/* HEADER */}
-        <div className="mb-16 max-w-3xl">
-          <p className="text-eyebrow mb-4">
+        {/* ========================================
+            HEADER
+        ======================================== */}
+
+        <div className="reviews-header mb-16 max-w-3xl">
+          <p className="reviews-eyebrow text-eyebrow mb-4">
             Reviews
           </p>
 
-          <h2 className="text-heading mb-4 max-w-3xl">
+          <h2 className="reviews-heading text-heading mb-4 max-w-3xl">
             Trusted by teams that need one source of{" "}
             <span className="font-serif-italic text-[var(--secondary)]">
               truth
             </span>
           </h2>
 
-          <p className="text-body">
+          <p className="reviews-description text-body">
             Finally, everyone is looking at the same numbers.
           </p>
         </div>
 
-        {/* REVIEW CARDS */}
+        {/* ========================================
+            REVIEW CARDS
+        ======================================== */}
+
         <div className="mb-20 grid grid-cols-1 gap-8 md:grid-cols-3">
           {reviewsData.map((item, idx) => (
             <div
@@ -61,7 +410,17 @@ export const Reviews: React.FC = () => {
               className="relative pt-16"
             >
               {/* PROFILE IMAGE */}
-              <div className="absolute left-1/2 top-0 z-10 -translate-x-1/2">
+
+              <div
+                className="
+                  review-avatar
+                  absolute
+                  left-1/2
+                  top-0
+                  z-10
+                  -translate-x-1/2
+                "
+              >
                 <div
                   className="
                     rounded-full
@@ -86,8 +445,10 @@ export const Reviews: React.FC = () => {
               </div>
 
               {/* CARD */}
+
               <div
                 className="
+                  review-card
                   card
                   flex
                   h-full
@@ -96,16 +457,32 @@ export const Reviews: React.FC = () => {
                   p-8
                   pt-16
                   text-left
+                  will-change-transform
                 "
               >
                 <div>
 
                   {/* STAR RATING */}
-                  <div className="mb-6 flex justify-center gap-1 text-[var(--secondary)]">
+
+                  <div
+                    className="
+                      review-stars
+                      mb-6
+                      flex
+                      justify-center
+                      gap-1
+                      text-[var(--secondary)]
+                    "
+                  >
                     {[...Array(5)].map((_, i) => (
                       <svg
                         key={i}
-                        className="h-5 w-5 fill-current"
+                        className="
+                          h-5
+                          w-5
+                          fill-current
+                          will-change-transform
+                        "
                         viewBox="0 0 20 20"
                         aria-hidden="true"
                       >
@@ -115,23 +492,26 @@ export const Reviews: React.FC = () => {
                   </div>
 
                   {/* REVIEW TITLE */}
-                  <h3 className="text-subheading mb-4 text-[var(--accent)]">
+
+                  <h3 className="review-title text-subheading mb-4 text-[var(--accent)]">
                     {item.title}
                   </h3>
 
                   {/* REVIEW CONTENT */}
-                  <p className="text-body mb-8">
+
+                  <p className="review-content text-body mb-8">
                     {item.content}
                   </p>
                 </div>
 
                 {/* REVIEWER */}
+
                 <div>
-                  <div className="text-third-heading text-[var(--accent)]">
+                  <div className="reviewer-name text-third-heading text-[var(--accent)]">
                     {item.name}
                   </div>
 
-                  <div className="text-small text-[var(--accent)]">
+                  <div className="reviewer-role text-small text-[var(--accent)]">
                     {item.role}
                   </div>
                 </div>
@@ -140,7 +520,10 @@ export const Reviews: React.FC = () => {
           ))}
         </div>
 
-        {/* FOOTER METRICS */}
+        {/* ========================================
+            FOOTER METRICS
+        ======================================== */}
+
         <div
           className="
             grid
@@ -153,7 +536,7 @@ export const Reviews: React.FC = () => {
             md:grid-cols-3
           "
         >
-          <div>
+          <div className="review-metric">
             <div className="text-metric text-[var(--accent)]">
               14,000+
             </div>
@@ -163,7 +546,7 @@ export const Reviews: React.FC = () => {
             </div>
           </div>
 
-          <div>
+          <div className="review-metric">
             <div className="text-metric text-[var(--accent)]">
               45M+
             </div>
@@ -173,7 +556,7 @@ export const Reviews: React.FC = () => {
             </div>
           </div>
 
-          <div>
+          <div className="review-metric">
             <div className="text-metric text-[var(--accent)]">
               99.9%
             </div>

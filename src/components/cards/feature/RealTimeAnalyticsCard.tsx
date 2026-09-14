@@ -1,7 +1,7 @@
 import React from "react";
 import { Check } from "lucide-react";
 
-import chart from "../images/barchart.png";
+import chart from "../../../assets/images/barchart.png"
 
 export const RealTimeAnalyticsCard: React.FC = () => {
   return (

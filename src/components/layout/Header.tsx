@@ -1,8 +1,8 @@
-'use client';
-
 import { useState, useLayoutEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+import logo from "../../assets/logos/orbit-logo.png";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -10,6 +10,7 @@ if (typeof window !== "undefined") {
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+
   const headerRef = useRef<HTMLElement>(null);
   const navContainerRef = useRef<HTMLElement>(null);
 
@@ -26,10 +27,17 @@ export default function Header() {
         "(prefers-reduced-motion: reduce)"
       ).matches;
 
+      /* ----------------------------------------
+         Initial Header Animation
+         ---------------------------------------- */
+
       if (!prefersReducedMotion) {
         gsap.fromTo(
           headerRef.current,
-          { opacity: 0, y: -8 },
+          {
+            opacity: 0,
+            y: -8,
+          },
           {
             opacity: 1,
             y: 0,
@@ -37,47 +45,61 @@ export default function Header() {
             ease: "power2.out",
           }
         );
-      } else {
-        gsap.set(headerRef.current, { opacity: 1, y: 0 });
       }
+
+      /* ----------------------------------------
+         Scroll Header
+         ---------------------------------------- */
 
       ScrollTrigger.create({
         start: "top+=20 top",
+
         onEnter: () => {
           gsap.to(headerRef.current, {
             position: "fixed",
             top: 0,
             left: 0,
             width: "100%",
-            backgroundColor: "rgba(255, 255, 255, 0.92)",
-            backdropFilter: "blur(12px)",
-            borderBottomColor: "rgba(0, 0, 0, 0.06)",
-            boxShadow: "0 1px 3px 0 rgba(0, 0, 0, 0.02)",
+
+            backgroundColor: "rgba(255, 255, 255, 0.94)",
+            backdropFilter: "blur(14px)",
+
+            borderBottomColor: "rgba(230, 225, 236, 0.9)",
+
+            boxShadow: "0 4px 16px rgba(33, 24, 50, 0.04)",
+
             duration: 0.25,
-            ease: "power1.out",
+            ease: "power2.out",
           });
 
           gsap.to(navContainerRef.current, {
             height: "64px",
+
             duration: 0.25,
-            ease: "power1.out",
+            ease: "power2.out",
           });
         },
+
         onLeaveBack: () => {
           gsap.to(headerRef.current, {
             position: "relative",
+
             backgroundColor: "rgba(255, 255, 255, 1)",
             backdropFilter: "blur(0px)",
+
             borderBottomColor: "transparent",
+
             boxShadow: "none",
+
             duration: 0.25,
-            ease: "power1.out",
+            ease: "power2.out",
           });
 
           gsap.to(navContainerRef.current, {
             height: "76px",
+
             duration: 0.25,
-            ease: "power1.out",
+            ease: "power2.out",
           });
         },
       });
@@ -89,30 +111,66 @@ export default function Header() {
   return (
     <header
       ref={headerRef}
-      className="relative z-50 w-full border-b border-transparent bg-white transition-colors duration-200"
+      className="
+        sticky
+        top-0
+        z-50
+        w-full
+        border-b
+        border-transparent
+        bg-white
+      "
     >
       <nav
         ref={navContainerRef}
-        className="mx-auto flex h-[76px] max-w-7xl items-center justify-between px-6 transition-[height] duration-200 ease-out"
+        className="
+          mx-auto
+          flex
+          h-[76px]
+          max-w-7xl
+          items-center
+          justify-between
+          px-4
+          sm:px-6
+          lg:px-8
+        "
       >
+        {/* ========================================
+            Logo
+            ======================================== */}
 
-        {/* Logo */}
         <a
           href="/"
-          className="flex items-center gap-2.5 no-underline opacity-100 transition-opacity duration-200 hover:opacity-90"
+          aria-label="Orbit home"
+          className="
+            flex
+            items-center
+            gap-2.5
+            no-underline
+            transition-opacity
+            duration-200
+            hover:opacity-80
+          "
         >
           <img
-            src="/orbit-logo.png"
+            src={logo}
             alt="Orbit"
-            className="block h-9 w-9 object-contain"
+            className="
+              block
+              h-8
+              w-8
+              object-contain
+              sm:h-9
+              sm:w-9
+            "
           />
 
           <span
             className="
-              text-[24px]
+              text-[23px]
               font-semibold
               leading-none
-              tracking-[-0.03em]
+              tracking-[-0.04em]
               text-[var(--primary)]
             "
           >
@@ -120,7 +178,10 @@ export default function Header() {
           </span>
         </a>
 
-        {/* Desktop Navigation */}
+        {/* ========================================
+            Desktop Navigation
+            ======================================== */}
+
         <div className="hidden items-center gap-8 md:flex">
           {navLinks.map((link) => (
             <a
@@ -133,43 +194,48 @@ export default function Header() {
           ))}
         </div>
 
-        {/* Desktop CTA */}
+        {/* ========================================
+            Desktop CTA
+            Matches Hero Primary CTA
+            ======================================== */}
+
         <button
           type="button"
           className="
             primary-button
             hidden
             rounded-lg
-            px-5
-            py-2.5
-            text-sm
+            px-4
+            py-2
+            text-[15px]
             font-medium
-            leading-none
-            transition-all
-            duration-200
-            hover:brightness-105
-            active:scale-[0.98]
-            md:block
+            active:scale-95
+            md:inline-flex
           "
         >
           Start Free
         </button>
 
-        {/* Tablet / Mobile Menu Toggle */}
+        {/* ========================================
+            Mobile Menu Toggle
+            ======================================== */}
+
         <button
           type="button"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-expanded={menuOpen}
-          onClick={() => setMenuOpen(!menuOpen)}
+          onClick={() => setMenuOpen((prev) => !prev)}
           className="
-            block
+            inline-flex
+            items-center
+            justify-center
             text-sm
             font-medium
             leading-none
             text-[var(--primary)]
             transition-opacity
             duration-200
-            hover:opacity-75
+            hover:opacity-60
             md:hidden
           "
         >
@@ -177,7 +243,10 @@ export default function Header() {
         </button>
       </nav>
 
-      {/* Tablet / Mobile Dropdown Panel */}
+      {/* ========================================
+          Mobile / Tablet Menu
+          ======================================== */}
+
       <div
         className={`
           absolute
@@ -187,8 +256,8 @@ export default function Header() {
           w-full
           overflow-hidden
           border-t
-          border-black/5
-          bg-white/98
+          border-[var(--border)]
+          bg-white/95
           backdrop-blur-md
           transition-all
           duration-200
@@ -196,14 +265,24 @@ export default function Header() {
           md:hidden
           ${
             menuOpen
-              ? "max-h-[500px] opacity-100"
+              ? "pointer-events-auto max-h-[500px] opacity-100"
               : "pointer-events-none max-h-0 opacity-0"
           }
         `}
       >
-        <div className="mx-auto max-w-7xl px-6 py-5">
+        <div
+          className="
+            mx-auto
+            max-w-7xl
+            px-4
+            py-5
+            sm:px-6
+          "
+        >
+          {/* ----------------------------------------
+              Navigation Links
+              ---------------------------------------- */}
 
-          {/* Mobile Navigation Links */}
           <div className="flex flex-col">
             {navLinks.map((link) => (
               <a
@@ -213,7 +292,7 @@ export default function Header() {
                 className="
                   header-link
                   border-b
-                  border-black/5
+                  border-[var(--border)]
                   py-4
                 "
               >
@@ -222,7 +301,11 @@ export default function Header() {
             ))}
           </div>
 
-          {/* Mobile CTA */}
+          {/* ----------------------------------------
+              Mobile CTA
+              Matches Hero Primary CTA
+              ---------------------------------------- */}
+
           <button
             type="button"
             onClick={() => setMenuOpen(false)}
@@ -231,19 +314,15 @@ export default function Header() {
               mt-5
               w-full
               rounded-lg
-              px-5
-              py-3
-              text-sm
+              px-4
+              py-2
+              text-[15px]
               font-medium
-              leading-none
-              transition-all
-              duration-200
-              active:scale-[0.98]
+              active:scale-95
             "
           >
             Start Free
           </button>
-
         </div>
       </div>
     </header>

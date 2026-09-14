@@ -1,15 +1,124 @@
-import React from "react";
+import React, { useRef } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export const InsideOrbitSection: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  useGSAP(
+    () => {
+      const section = sectionRef.current;
+
+      if (!section) return;
+
+      if (
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        return;
+      }
+
+      const header = section.querySelector(".inside-orbit-header");
+      const cards = gsap.utils.toArray<HTMLElement>(
+        ".inside-orbit-card"
+      );
+
+      // ---------------------------------------------
+      // Header reveal
+      // ---------------------------------------------
+
+      if (header) {
+        gsap.set(header, {
+          opacity: 0,
+          scale: 0.98,
+        });
+
+        gsap.to(header, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.8,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: header,
+            start: "top 85%",
+            end: "top 55%",
+            scrub: 1,
+          },
+        });
+      }
+
+      // ---------------------------------------------
+      // Cards
+      // ---------------------------------------------
+
+      cards.forEach((card) => {
+        const cardContent = card.querySelector(
+          ".inside-orbit-card-content"
+        );
+
+        gsap.set(card, {
+          opacity: 0,
+          scale: 0.97,
+        });
+
+        const cardTimeline = gsap.timeline({
+          scrollTrigger: {
+            trigger: card,
+            start: "top 85%",
+            end: "top 55%",
+            scrub: 1,
+          },
+        });
+
+        cardTimeline.to(card, {
+          opacity: 1,
+          scale: 1,
+          duration: 1,
+          ease: "power2.out",
+        });
+
+        // Subtle internal reveal after card appears
+        if (cardContent) {
+          const children = Array.from(
+            cardContent.children
+          );
+
+          gsap.set(children, {
+            opacity: 0,
+          });
+
+          cardTimeline.to(
+            children,
+            {
+              opacity: 1,
+              duration: 0.35,
+              stagger: 0.08,
+              ease: "none",
+            },
+            "-=0.35"
+          );
+        }
+      });
+    },
+    {
+      scope: sectionRef,
+    }
+  );
+
   return (
-    <section className="w-full py-20">
+    <section
+      ref={sectionRef}
+      className="w-full py-20"
+    >
       <div className="mx-auto max-w-7xl px-6">
 
         {/* ========================================
             HEADER
         ======================================== */}
 
-        <div className="mx-auto mb-16 max-w-3xl text-center">
+        <div className="inside-orbit-header mx-auto mb-16 max-w-3xl text-center">
           <p className="text-eyebrow mb-4">
             Inside Orbit
           </p>
@@ -39,9 +148,9 @@ export const InsideOrbitSection: React.FC = () => {
               CARD 1 — ACQUISITION CHANNELS
           ====================================== */}
 
-          <div className="card main-card max-w-none">
+          <div className="inside-orbit-card card main-card max-w-none">
+            <div className="inside-orbit-card-content">
 
-            <div>
               {/* Card Header */}
               <div className="mb-8 text-center">
                 <h3 className="text-subheading mb-1">
@@ -60,7 +169,6 @@ export const InsideOrbitSection: React.FC = () => {
                   className="h-full w-full -rotate-90"
                   viewBox="0 0 100 100"
                 >
-                  {/* Self-serve */}
                   <circle
                     cx="50"
                     cy="50"
@@ -72,7 +180,6 @@ export const InsideOrbitSection: React.FC = () => {
                     strokeDashoffset="0"
                   />
 
-                  {/* Sales */}
                   <circle
                     cx="50"
                     cy="50"
@@ -84,7 +191,6 @@ export const InsideOrbitSection: React.FC = () => {
                     strokeDashoffset="-120"
                   />
 
-                  {/* Partners */}
                   <circle
                     cx="50"
                     cy="50"
@@ -96,7 +202,6 @@ export const InsideOrbitSection: React.FC = () => {
                     strokeDashoffset="-190"
                   />
 
-                  {/* Other */}
                   <circle
                     cx="50"
                     cy="50"
@@ -254,9 +359,9 @@ export const InsideOrbitSection: React.FC = () => {
               CARD 2 — CONVERSION FUNNEL
           ====================================== */}
 
-          <div className="card main-card max-w-none">
+          <div className="inside-orbit-card card main-card max-w-none">
+            <div className="inside-orbit-card-content">
 
-            <div>
               {/* Card Header */}
               <div className="mb-8 text-center">
                 <h3 className="text-subheading mb-1">
@@ -357,9 +462,9 @@ export const InsideOrbitSection: React.FC = () => {
               CARD 3 — CUSTOMER HEALTH
           ====================================== */}
 
-          <div className="card main-card max-w-none">
+          <div className="inside-orbit-card card main-card max-w-none">
+            <div className="inside-orbit-card-content">
 
-            <div>
               {/* Card Header */}
               <div className="mb-6 text-center">
                 <h3 className="text-subheading mb-1">
@@ -481,6 +586,7 @@ export const InsideOrbitSection: React.FC = () => {
                       Healthy
                     </span>
                   </div>
+
                 </div>
               </div>
             </div>
