@@ -42,6 +42,7 @@ export const Pricing: React.FC = () => {
       const section = sectionRef.current;
       const header = headerRef.current;
       const billingToggle = billingToggleRef.current;
+
       const starterCard = starterCardRef.current;
       const growthCard = growthCardRef.current;
       const enterpriseCard = enterpriseCardRef.current;
@@ -78,211 +79,424 @@ export const Pricing: React.FC = () => {
 
       /*
       ------------------------------------------------------------
-      INITIAL STATES
+      RESPONSIVE ANIMATION
       ------------------------------------------------------------
       */
-      if (eyebrow instanceof HTMLElement) {
-        gsap.set(eyebrow, { y: 18, opacity: 0 });
-      }
-
-      if (heading instanceof HTMLElement) {
-        gsap.set(heading, { y: 32, opacity: 0 });
-      }
-
-      if (description instanceof HTMLElement) {
-        gsap.set(description, { y: 20, opacity: 0 });
-      }
-
-      if (billingToggle instanceof HTMLElement) {
-        gsap.set(billingToggle, { y: 18, opacity: 0 });
-      }
-
-      if (cards.length > 0) {
-        gsap.set(cards, {
-          y: 45,
-          opacity: 0,
-        });
-      }
-
-      if (growthCard instanceof HTMLDivElement) {
-        gsap.set(growthCard, {
-          y: 58,
-          opacity: 0,
-        });
-      }
+      const mm = gsap.matchMedia();
 
       /*
-      ------------------------------------------------------------
-      MAIN SCROLL TIMELINE
-      ------------------------------------------------------------
+      ============================================================
+      DESKTOP
+      ============================================================
       */
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: section,
-          start: "top 82%",
-          end: "bottom 58%",
-          scrub: 1.1,
-          invalidateOnRefresh: true,
-        },
+      mm.add("(min-width: 768px)", () => {
+        /*
+        ------------------------------------------------------------
+        INITIAL STATES
+        ------------------------------------------------------------
+        */
+        if (eyebrow instanceof HTMLElement) {
+          gsap.set(eyebrow, {
+            y: 18,
+            opacity: 0,
+          });
+        }
+
+        if (heading instanceof HTMLElement) {
+          gsap.set(heading, {
+            y: 32,
+            opacity: 0,
+          });
+        }
+
+        if (description instanceof HTMLElement) {
+          gsap.set(description, {
+            y: 20,
+            opacity: 0,
+          });
+        }
+
+        if (billingToggle instanceof HTMLElement) {
+          gsap.set(billingToggle, {
+            y: 18,
+            opacity: 0,
+          });
+        }
+
+        if (cards.length > 0) {
+          gsap.set(cards, {
+            y: 45,
+            opacity: 0,
+          });
+        }
+
+        if (growthCard instanceof HTMLDivElement) {
+          gsap.set(growthCard, {
+            y: 58,
+            opacity: 0,
+          });
+        }
+
+        /*
+        ------------------------------------------------------------
+        MAIN DESKTOP TIMELINE
+        ------------------------------------------------------------
+        */
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 82%",
+            end: "bottom 58%",
+            scrub: 1.1,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        /*
+        ------------------------------------------------------------
+        HEADER & TOGGLE
+        ------------------------------------------------------------
+        */
+        if (eyebrow instanceof HTMLElement) {
+          tl.to(
+            eyebrow,
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.4,
+              ease: "power3.out",
+            },
+            0
+          );
+        }
+
+        if (heading instanceof HTMLElement) {
+          tl.to(
+            heading,
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.65,
+              ease: "power3.out",
+            },
+            "-=0.2"
+          );
+        }
+
+        if (description instanceof HTMLElement) {
+          tl.to(
+            description,
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.5,
+              ease: "power3.out",
+            },
+            "-=0.25"
+          );
+        }
+
+        if (billingToggle instanceof HTMLElement) {
+          tl.to(
+            billingToggle,
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.5,
+              ease: "power3.out",
+            },
+            "-=0.2"
+          );
+        }
+
+        /*
+        ------------------------------------------------------------
+        PRICING CARDS
+        ------------------------------------------------------------
+        */
+        const firstCard = cards[0];
+        const secondCard = cards[1];
+        const thirdCard = cards[2];
+
+        if (firstCard instanceof HTMLDivElement) {
+          tl.to(
+            firstCard,
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.65,
+              ease: "power3.out",
+            },
+            "-=0.15"
+          );
+        }
+
+        if (secondCard instanceof HTMLDivElement) {
+          tl.to(
+            secondCard,
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.75,
+              ease: "power3.out",
+            },
+            "-=0.5"
+          );
+        }
+
+        if (thirdCard instanceof HTMLDivElement) {
+          tl.to(
+            thirdCard,
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.65,
+              ease: "power3.out",
+            },
+            "-=0.55"
+          );
+        }
+
+        /*
+        ------------------------------------------------------------
+        CARD CONTENT DEPTH
+        ------------------------------------------------------------
+        */
+        const starterContent =
+          starterCard?.querySelector<HTMLElement>(
+            ".pricing-card-content"
+          ) ?? null;
+
+        const growthContent =
+          growthCard?.querySelector<HTMLElement>(
+            ".pricing-card-content"
+          ) ?? null;
+
+        const enterpriseContent =
+          enterpriseCard?.querySelector<HTMLElement>(
+            ".pricing-card-content"
+          ) ?? null;
+
+        if (starterContent instanceof HTMLElement) {
+          tl.to(
+            starterContent,
+            {
+              y: -8,
+              ease: "none",
+            },
+            ">"
+          );
+        }
+
+        if (growthContent instanceof HTMLElement) {
+          tl.to(
+            growthContent,
+            {
+              y: -12,
+              ease: "none",
+            },
+            "<"
+          );
+        }
+
+        if (enterpriseContent instanceof HTMLElement) {
+          tl.to(
+            enterpriseContent,
+            {
+              y: -8,
+              ease: "none",
+            },
+            "<"
+          );
+        }
       });
 
       /*
-      ------------------------------------------------------------
-      HEADER & TOGGLE
-      ------------------------------------------------------------
+      ============================================================
+      MOBILE
+      ============================================================
       */
-      if (eyebrow instanceof HTMLElement) {
-        tl.to(
-          eyebrow,
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.4,
-            ease: "power3.out",
+      mm.add("(max-width: 767px)", () => {
+        /*
+        ------------------------------------------------------------
+        MOBILE INITIAL STATES
+        ------------------------------------------------------------
+        */
+        if (eyebrow instanceof HTMLElement) {
+          gsap.set(eyebrow, {
+            y: 10,
+            opacity: 0,
+          });
+        }
+
+        if (heading instanceof HTMLElement) {
+          gsap.set(heading, {
+            y: 18,
+            opacity: 0,
+          });
+        }
+
+        if (description instanceof HTMLElement) {
+          gsap.set(description, {
+            y: 12,
+            opacity: 0,
+          });
+        }
+
+        if (billingToggle instanceof HTMLElement) {
+          gsap.set(billingToggle, {
+            y: 10,
+            opacity: 0,
+          });
+        }
+
+        /*
+        Cards start much closer to their final position.
+        This makes them feel responsive on smaller screens.
+        */
+        if (cards.length > 0) {
+          gsap.set(cards, {
+            y: 24,
+            opacity: 0,
+          });
+        }
+
+        /*
+        ------------------------------------------------------------
+        MOBILE TIMELINE
+        ------------------------------------------------------------
+        */
+        const mobileTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: section,
+            start: "top 90%",
+            end: "bottom 72%",
+            scrub: 0.45,
+            invalidateOnRefresh: true,
           },
-          0
-        );
-      }
+        });
 
-      if (heading instanceof HTMLElement) {
-        tl.to(
-          heading,
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.65,
-            ease: "power3.out",
-          },
-          "-=0.2"
-        );
-      }
+        /*
+        ------------------------------------------------------------
+        HEADER
+        ------------------------------------------------------------
+        */
+        if (eyebrow instanceof HTMLElement) {
+          mobileTl.to(
+            eyebrow,
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.25,
+              ease: "power2.out",
+            },
+            0
+          );
+        }
 
-      if (description instanceof HTMLElement) {
-        tl.to(
-          description,
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.5,
-            ease: "power3.out",
-          },
-          "-=0.25"
-        );
-      }
+        if (heading instanceof HTMLElement) {
+          mobileTl.to(
+            heading,
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.4,
+              ease: "power2.out",
+            },
+            "-=0.12"
+          );
+        }
 
-      if (billingToggle instanceof HTMLElement) {
-        tl.to(
-          billingToggle,
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.5,
-            ease: "power3.out",
-          },
-          "-=0.2"
-        );
-      }
+        if (description instanceof HTMLElement) {
+          mobileTl.to(
+            description,
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.3,
+              ease: "power2.out",
+            },
+            "-=0.12"
+          );
+        }
 
-      /*
-      ------------------------------------------------------------
-      PRICING CARDS
-      ------------------------------------------------------------
-      */
-      const firstCard = cards[0];
-      const secondCard = cards[1];
-      const thirdCard = cards[2];
+        if (billingToggle instanceof HTMLElement) {
+          mobileTl.to(
+            billingToggle,
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.3,
+              ease: "power2.out",
+            },
+            "-=0.1"
+          );
+        }
 
-      if (firstCard instanceof HTMLDivElement) {
-        tl.to(
-          firstCard,
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.65,
-            ease: "power3.out",
-          },
-          "-=0.15"
-        );
-      }
+        /*
+        ------------------------------------------------------------
+        MOBILE CARDS
+        ------------------------------------------------------------
 
-      if (secondCard instanceof HTMLDivElement) {
-        tl.to(
-          secondCard,
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.75,
-            ease: "power3.out",
-          },
-          "-=0.5"
-        );
-      }
+        Cards appear as complete units.
+        They overlap heavily so the user doesn't need to scroll
+        excessively before seeing the full pricing section.
+        */
+        const firstCard = cards[0];
+        const secondCard = cards[1];
+        const thirdCard = cards[2];
 
-      if (thirdCard instanceof HTMLDivElement) {
-        tl.to(
-          thirdCard,
-          {
-            y: 0,
-            opacity: 1,
-            duration: 0.65,
-            ease: "power3.out",
-          },
-          "-=0.55"
-        );
-      }
+        if (firstCard instanceof HTMLDivElement) {
+          mobileTl.to(
+            firstCard,
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.35,
+              ease: "power2.out",
+            },
+            "-=0.08"
+          );
+        }
 
-      /*
-      ------------------------------------------------------------
-      CARD CONTENT DEPTH
-      ------------------------------------------------------------
-      */
-      const starterContent =
-        starterCard?.querySelector<HTMLElement>(
-          ".pricing-card-content"
-        ) ?? null;
+        if (secondCard instanceof HTMLDivElement) {
+          mobileTl.to(
+            secondCard,
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.35,
+              ease: "power2.out",
+            },
+            "-=0.18"
+          );
+        }
 
-      const growthContent =
-        growthCard?.querySelector<HTMLElement>(
-          ".pricing-card-content"
-        ) ?? null;
+        if (thirdCard instanceof HTMLDivElement) {
+          mobileTl.to(
+            thirdCard,
+            {
+              y: 0,
+              opacity: 1,
+              duration: 0.35,
+              ease: "power2.out",
+            },
+            "-=0.18"
+          );
+        }
 
-      const enterpriseContent =
-        enterpriseCard?.querySelector<HTMLElement>(
-          ".pricing-card-content"
-        ) ?? null;
+        /*
+        ------------------------------------------------------------
+        NO MOBILE CONTENT DEPTH
+        ------------------------------------------------------------
 
-      if (starterContent instanceof HTMLElement) {
-        tl.to(
-          starterContent,
-          {
-            y: -8,
-            ease: "none",
-          },
-          ">"
-        );
-      }
+        The cards already contain a lot of vertical content.
+        Additional internal movement makes mobile feel slower
+        without adding much visual value.
+        */
+      });
 
-      if (growthContent instanceof HTMLElement) {
-        tl.to(
-          growthContent,
-          {
-            y: -12,
-            ease: "none",
-          },
-          "<"
-        );
-      }
-
-      if (enterpriseContent instanceof HTMLElement) {
-        tl.to(
-          enterpriseContent,
-          {
-            y: -8,
-            ease: "none",
-          },
-          "<"
-        );
-      }
+      return () => mm.revert();
     },
     {
       scope: sectionRef,

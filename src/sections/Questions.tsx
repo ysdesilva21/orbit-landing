@@ -1,6 +1,9 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
+
 import { Plus, Minus } from 'lucide-react';
+
 import gsap from 'gsap';
+
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -66,16 +69,15 @@ export const Questions: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const sectionRef = useRef<HTMLElement | null>(null);
-
   const leftContentRef = useRef<HTMLDivElement | null>(null);
+
   const eyebrowRef = useRef<HTMLParagraphElement | null>(null);
   const headingRef = useRef<HTMLHeadingElement | null>(null);
-
   const contactRef = useRef<HTMLDivElement | null>(null);
 
   const faqContainerRef = useRef<HTMLDivElement | null>(null);
-  const faqItemsRef = useRef<(HTMLDivElement | null)[]>([]);
 
+  const faqItemsRef = useRef<(HTMLDivElement | null)[]>([]);
   const answerRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const toggleAccordion = (index: number) => {
@@ -113,137 +115,285 @@ export const Questions: React.FC = () => {
       }
 
       /*
-      --------------------------------------------------------
-      Initial states
-      --------------------------------------------------------
+      ========================================================
+      RESPONSIVE ANIMATION
+      ========================================================
       */
 
-      gsap.set(eyebrowRef.current, {
-        opacity: 0,
-        y: 18,
-      });
+      const mm = gsap.matchMedia();
 
-      gsap.set(headingRef.current, {
-        opacity: 0,
-        y: 30,
-      });
+      /*
+      ========================================================
+      DESKTOP
+      ========================================================
+      */
 
-      gsap.set(contactRef.current, {
-        opacity: 0,
-        y: 25,
-      });
+      mm.add('(min-width: 768px)', () => {
+        /*
+        --------------------------------------------------------
+        INITIAL STATES
+        --------------------------------------------------------
+        */
 
-      gsap.set(faqItemsRef.current, {
-        opacity: 0,
-        y: 35,
+        gsap.set(eyebrowRef.current, {
+          opacity: 0,
+          y: 18,
+        });
+
+        gsap.set(headingRef.current, {
+          opacity: 0,
+          y: 30,
+        });
+
+        gsap.set(contactRef.current, {
+          opacity: 0,
+          y: 25,
+        });
+
+        gsap.set(faqItemsRef.current, {
+          opacity: 0,
+          y: 35,
+        });
+
+        /*
+        --------------------------------------------------------
+        MAIN DESKTOP TIMELINE
+        --------------------------------------------------------
+        */
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 82%',
+            end: 'bottom 58%',
+            scrub: 1.1,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        /*
+        --------------------------------------------------------
+        LEFT SIDE
+        --------------------------------------------------------
+        */
+
+        tl.to(
+          eyebrowRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            ease: 'none',
+          },
+          0
+        );
+
+        tl.to(
+          headingRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            ease: 'none',
+          },
+          0.08
+        );
+
+        /*
+        --------------------------------------------------------
+        FAQ ROWS
+        --------------------------------------------------------
+        */
+
+        tl.to(
+          faqItemsRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.055,
+            ease: 'none',
+          },
+          0.05
+        );
+
+        /*
+        --------------------------------------------------------
+        CONTACT BLOCK
+        --------------------------------------------------------
+        */
+
+        tl.to(
+          contactRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            ease: 'none',
+          },
+          0.25
+        );
+
+        /*
+        --------------------------------------------------------
+        SUBTLE DESKTOP DEPTH
+        --------------------------------------------------------
+        */
+
+        tl.to(
+          headingRef.current,
+          {
+            y: -8,
+            ease: 'none',
+          },
+          0.55
+        );
+
+        tl.to(
+          contactRef.current,
+          {
+            y: -12,
+            ease: 'none',
+          },
+          0.55
+        );
+
+        tl.to(
+          faqItemsRef.current,
+          {
+            y: -10,
+            stagger: 0.025,
+            ease: 'none',
+          },
+          0.55
+        );
       });
 
       /*
-      --------------------------------------------------------
-      Main scroll-driven timeline
-      --------------------------------------------------------
+      ========================================================
+      MOBILE
+      ========================================================
       */
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 82%',
-          end: 'bottom 58%',
-          scrub: 1.1,
-          invalidateOnRefresh: true,
-        },
+      mm.add('(max-width: 767px)', () => {
+        /*
+        --------------------------------------------------------
+        INITIAL STATES
+        --------------------------------------------------------
+        */
+
+        gsap.set(eyebrowRef.current, {
+          opacity: 0,
+          y: 8,
+        });
+
+        gsap.set(headingRef.current, {
+          opacity: 0,
+          y: 14,
+        });
+
+        gsap.set(faqItemsRef.current, {
+          opacity: 0,
+          y: 18,
+        });
+
+        gsap.set(contactRef.current, {
+          opacity: 0,
+          y: 14,
+        });
+
+        /*
+        --------------------------------------------------------
+        MOBILE TIMELINE
+        --------------------------------------------------------
+
+        Short trigger range so the section resolves quickly.
+        */
+
+        const mobileTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 90%',
+            end: 'top 55%',
+            scrub: 0.4,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        /*
+        --------------------------------------------------------
+        HEADER
+        --------------------------------------------------------
+        */
+
+        mobileTl.to(
+          eyebrowRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.22,
+            ease: 'power2.out',
+          },
+          0
+        );
+
+        mobileTl.to(
+          headingRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.32,
+            ease: 'power2.out',
+          },
+          '-=0.12'
+        );
+
+        /*
+        --------------------------------------------------------
+        FAQ ROWS
+        --------------------------------------------------------
+
+        Each FAQ row enters as a complete unit.
+        The stagger is intentionally tight because there are
+        eight rows on mobile.
+        */
+
+        mobileTl.to(
+          faqItemsRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.24,
+            stagger: 0.035,
+            ease: 'power2.out',
+          },
+          '-=0.08'
+        );
+
+        /*
+        --------------------------------------------------------
+        CONTACT CTA
+        --------------------------------------------------------
+        */
+
+        mobileTl.to(
+          contactRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.28,
+            ease: 'power2.out',
+          },
+          '-=0.12'
+        );
+
+        /*
+        --------------------------------------------------------
+        NO MOBILE PARALLAX
+        --------------------------------------------------------
+
+        The FAQ list is already vertically long on mobile.
+        Additional movement would make the section feel slower.
+        */
       });
 
-      /*
-      Left side
-      */
-
-      tl.to(
-        eyebrowRef.current,
-        {
-          opacity: 1,
-          y: 0,
-          ease: 'none',
-        },
-        0
-      );
-
-      tl.to(
-        headingRef.current,
-        {
-          opacity: 1,
-          y: 0,
-          ease: 'none',
-        },
-        0.08
-      );
-
-      /*
-      FAQ rows
-      */
-
-      tl.to(
-        faqItemsRef.current,
-        {
-          opacity: 1,
-          y: 0,
-          stagger: 0.055,
-          ease: 'none',
-        },
-        0.05
-      );
-
-      /*
-      Contact block
-      */
-
-      tl.to(
-        contactRef.current,
-        {
-          opacity: 1,
-          y: 0,
-          ease: 'none',
-        },
-        0.25
-      );
-
-      /*
-      --------------------------------------------------------
-      Subtle depth / parallax
-      --------------------------------------------------------
-
-      No fading out.
-      No scaling the entire section.
-      Just slight movement for depth.
-      */
-
-      tl.to(
-        headingRef.current,
-        {
-          y: -8,
-          ease: 'none',
-        },
-        0.55
-      );
-
-      tl.to(
-        contactRef.current,
-        {
-          y: -12,
-          ease: 'none',
-        },
-        0.55
-      );
-
-      tl.to(
-        faqItemsRef.current,
-        {
-          y: -10,
-          stagger: 0.025,
-          ease: 'none',
-        },
-        0.55
-      );
+      return () => mm.revert();
     }, sectionRef);
 
     return () => ctx.revert();
@@ -299,9 +449,9 @@ export const Questions: React.FC = () => {
     >
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 px-6 lg:grid-cols-12">
 
-        {/* ================================================
+        {/* ==================================================
             LEFT CONTENT
-        ================================================= */}
+        ================================================== */}
 
         <div
           ref={leftContentRef}
@@ -362,9 +512,9 @@ export const Questions: React.FC = () => {
           </div>
         </div>
 
-        {/* ================================================
+        {/* ==================================================
             FAQ ACCORDION
-        ================================================= */}
+        ================================================== */}
 
         <div
           ref={faqContainerRef}
@@ -412,7 +562,6 @@ export const Questions: React.FC = () => {
                   "
                 >
                   <div className="flex items-start gap-4">
-
                     <span
                       className={`
                         shrink-0

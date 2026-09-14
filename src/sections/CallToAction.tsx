@@ -34,6 +34,9 @@ export const CallToAction: React.FC = () => {
             headingRef.current,
             descriptionRef.current,
             actionsRef.current,
+            gridRef.current,
+            glowLeftRef.current,
+            glowRightRef.current,
           ],
           {
             opacity: 1,
@@ -48,229 +51,440 @@ export const CallToAction: React.FC = () => {
 
       /*
       ========================================================
-      INITIAL STATES
+      RESPONSIVE ANIMATION
       ========================================================
       */
 
-      gsap.set(cardRef.current, {
-        opacity: 0,
-        y: 45,
-        scale: 0.985,
-      });
+      const mm = gsap.matchMedia();
 
-      gsap.set(eyebrowRef.current, {
-        opacity: 0,
-        y: 18,
-      });
+      /*
+      ========================================================
+      DESKTOP
+      ========================================================
+      */
 
-      gsap.set(headingRef.current, {
-        opacity: 0,
-        y: 28,
-      });
+      mm.add('(min-width: 768px)', () => {
+        /*
+        --------------------------------------------------------
+        INITIAL STATES
+        --------------------------------------------------------
+        */
 
-      gsap.set(descriptionRef.current, {
-        opacity: 0,
-        y: 20,
-      });
+        gsap.set(cardRef.current, {
+          opacity: 0,
+          y: 45,
+          scale: 0.985,
+        });
 
-      gsap.set(actionsRef.current, {
-        opacity: 0,
-        y: 22,
-      });
+        gsap.set(eyebrowRef.current, {
+          opacity: 0,
+          y: 18,
+        });
 
-      gsap.set(gridRef.current, {
-        opacity: 0,
-      });
+        gsap.set(headingRef.current, {
+          opacity: 0,
+          y: 28,
+        });
 
-      gsap.set([glowLeftRef.current, glowRightRef.current], {
-        opacity: 0,
+        gsap.set(descriptionRef.current, {
+          opacity: 0,
+          y: 20,
+        });
+
+        gsap.set(actionsRef.current, {
+          opacity: 0,
+          y: 22,
+        });
+
+        gsap.set(gridRef.current, {
+          opacity: 0,
+        });
+
+        gsap.set([glowLeftRef.current, glowRightRef.current], {
+          opacity: 0,
+        });
+
+        /*
+        --------------------------------------------------------
+        SCROLL-DRIVEN ANIMATION
+        --------------------------------------------------------
+        */
+
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 82%',
+            end: 'bottom 58%',
+            scrub: 1.2,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        /*
+        --------------------------------------------------------
+        CARD
+        --------------------------------------------------------
+        */
+
+        tl.to(
+          cardRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            ease: 'none',
+          },
+          0
+        );
+
+        /*
+        --------------------------------------------------------
+        BACKGROUND
+        --------------------------------------------------------
+        */
+
+        tl.to(
+          gridRef.current,
+          {
+            opacity: 0.4,
+            ease: 'none',
+          },
+          0.08
+        );
+
+        tl.to(
+          [glowLeftRef.current, glowRightRef.current],
+          {
+            opacity: 1,
+            ease: 'none',
+          },
+          0
+        );
+
+        /*
+        --------------------------------------------------------
+        TEXT
+        --------------------------------------------------------
+        */
+
+        tl.to(
+          eyebrowRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            ease: 'none',
+          },
+          0.12
+        );
+
+        tl.to(
+          headingRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            ease: 'none',
+          },
+          0.18
+        );
+
+        tl.to(
+          descriptionRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            ease: 'none',
+          },
+          0.28
+        );
+
+        /*
+        --------------------------------------------------------
+        ACTIONS
+        --------------------------------------------------------
+        */
+
+        tl.to(
+          actionsRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            ease: 'none',
+          },
+          0.34
+        );
+
+        /*
+        --------------------------------------------------------
+        SUBTLE PARALLAX
+        --------------------------------------------------------
+        */
+
+        tl.to(
+          cardRef.current,
+          {
+            y: -8,
+            ease: 'none',
+          },
+          0.6
+        );
+
+        tl.to(
+          headingRef.current,
+          {
+            y: -6,
+            ease: 'none',
+          },
+          0.6
+        );
+
+        tl.to(
+          descriptionRef.current,
+          {
+            y: -8,
+            ease: 'none',
+          },
+          0.6
+        );
+
+        tl.to(
+          actionsRef.current,
+          {
+            y: -10,
+            ease: 'none',
+          },
+          0.6
+        );
+
+        /*
+        --------------------------------------------------------
+        BACKGROUND DEPTH
+        --------------------------------------------------------
+        */
+
+        tl.to(
+          glowLeftRef.current,
+          {
+            x: -20,
+            y: -12,
+            ease: 'none',
+          },
+          0
+        );
+
+        tl.to(
+          glowRightRef.current,
+          {
+            x: 20,
+            y: 12,
+            ease: 'none',
+          },
+          0
+        );
+
+        tl.to(
+          gridRef.current,
+          {
+            y: -10,
+            ease: 'none',
+          },
+          0
+        );
       });
 
       /*
       ========================================================
-      SCROLL-DRIVEN ANIMATION
+      MOBILE
       ========================================================
       */
 
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top 82%',
-          end: 'bottom 58%',
-          scrub: 1.2,
-          invalidateOnRefresh: true,
-        },
-      });
+      mm.add('(max-width: 767px)', () => {
+        /*
+        --------------------------------------------------------
+        INITIAL STATES
+        --------------------------------------------------------
+        */
 
-      /*
-      --------------------------------------------------------
-      Card
-      --------------------------------------------------------
-      */
+        gsap.set(cardRef.current, {
+          opacity: 0,
+          y: 20,
+          scale: 0.995,
+        });
 
-      tl.to(
-        cardRef.current,
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          ease: 'none',
-        },
-        0
-      );
+        gsap.set(eyebrowRef.current, {
+          opacity: 0,
+          y: 8,
+        });
 
-      /*
-      --------------------------------------------------------
-      Background
-      --------------------------------------------------------
-      */
+        gsap.set(headingRef.current, {
+          opacity: 0,
+          y: 14,
+        });
 
-      tl.to(
-        gridRef.current,
-        {
-          opacity: 0.4,
-          ease: 'none',
-        },
-        0.08
-      );
-
-      tl.to(
-        [glowLeftRef.current, glowRightRef.current],
-        {
-          opacity: 1,
-          ease: 'none',
-        },
-        0
-      );
-
-      /*
-      --------------------------------------------------------
-      Text
-      --------------------------------------------------------
-      */
-
-      tl.to(
-        eyebrowRef.current,
-        {
-          opacity: 1,
-          y: 0,
-          ease: 'none',
-        },
-        0.12
-      );
-
-      tl.to(
-        headingRef.current,
-        {
-          opacity: 1,
-          y: 0,
-          ease: 'none',
-        },
-        0.18
-      );
-
-      tl.to(
-        descriptionRef.current,
-        {
-          opacity: 1,
-          y: 0,
-          ease: 'none',
-        },
-        0.28
-      );
-
-      /*
-      --------------------------------------------------------
-      Actions
-      --------------------------------------------------------
-      */
-
-      tl.to(
-        actionsRef.current,
-        {
-          opacity: 1,
-          y: 0,
-          ease: 'none',
-        },
-        0.34
-      );
-
-      /*
-      ========================================================
-      SUBTLE PARALLAX
-      ========================================================
-      */
-
-      tl.to(
-        cardRef.current,
-        {
-          y: -8,
-          ease: 'none',
-        },
-        0.6
-      );
-
-      tl.to(
-        headingRef.current,
-        {
-          y: -6,
-          ease: 'none',
-        },
-        0.6
-      );
-
-      tl.to(
-        descriptionRef.current,
-        {
-          y: -8,
-          ease: 'none',
-        },
-        0.6
-      );
-
-      tl.to(
-        actionsRef.current,
-        {
-          y: -10,
-          ease: 'none',
-        },
-        0.6
-      );
-
-      /*
-      --------------------------------------------------------
-      Background depth
-      --------------------------------------------------------
-      */
-
-      tl.to(
-        glowLeftRef.current,
-        {
-          x: -20,
-          y: -12,
-          ease: 'none',
-        },
-        0
-      );
-
-      tl.to(
-        glowRightRef.current,
-        {
-          x: 20,
+        gsap.set(descriptionRef.current, {
+          opacity: 0,
           y: 12,
-          ease: 'none',
-        },
-        0
-      );
+        });
 
-      tl.to(
-        gridRef.current,
-        {
-          y: -10,
-          ease: 'none',
-        },
-        0
-      );
+        gsap.set(actionsRef.current, {
+          opacity: 0,
+          y: 14,
+        });
+
+        gsap.set(gridRef.current, {
+          opacity: 0,
+        });
+
+        gsap.set([glowLeftRef.current, glowRightRef.current], {
+          opacity: 0,
+        });
+
+        /*
+        --------------------------------------------------------
+        MOBILE SCROLL TIMELINE
+        --------------------------------------------------------
+
+        Much shorter range and faster scrub.
+        The CTA becomes visible quickly after entering the
+        viewport instead of waiting through the whole section.
+        */
+
+        const mobileTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top 92%',
+            end: 'top 55%',
+            scrub: 0.35,
+            invalidateOnRefresh: true,
+          },
+        });
+
+        /*
+        --------------------------------------------------------
+        CARD + BACKGROUND
+        --------------------------------------------------------
+        */
+
+        mobileTl.to(
+          cardRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.35,
+            ease: 'power2.out',
+          },
+          0
+        );
+
+        mobileTl.to(
+          [glowLeftRef.current, glowRightRef.current],
+          {
+            opacity: 1,
+            duration: 0.3,
+            ease: 'none',
+          },
+          0
+        );
+
+        mobileTl.to(
+          gridRef.current,
+          {
+            opacity: 0.4,
+            duration: 0.3,
+            ease: 'none',
+          },
+          0
+        );
+
+        /*
+        --------------------------------------------------------
+        TEXT
+        --------------------------------------------------------
+        */
+
+        mobileTl.to(
+          eyebrowRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.25,
+            ease: 'power2.out',
+          },
+          '-=0.18'
+        );
+
+        mobileTl.to(
+          headingRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.3,
+            ease: 'power2.out',
+          },
+          '-=0.16'
+        );
+
+        mobileTl.to(
+          descriptionRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.28,
+            ease: 'power2.out',
+          },
+          '-=0.14'
+        );
+
+        /*
+        --------------------------------------------------------
+        ACTIONS
+        --------------------------------------------------------
+        */
+
+        mobileTl.to(
+          actionsRef.current,
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.28,
+            ease: 'power2.out',
+          },
+          '-=0.12'
+        );
+
+        /*
+        --------------------------------------------------------
+        MOBILE BACKGROUND DEPTH
+        --------------------------------------------------------
+
+        Keep only a tiny amount of movement.
+        No content parallax on mobile.
+        */
+
+        mobileTl.to(
+          glowLeftRef.current,
+          {
+            x: -8,
+            y: -5,
+            ease: 'none',
+            duration: 0.25,
+          },
+          0
+        );
+
+        mobileTl.to(
+          glowRightRef.current,
+          {
+            x: 8,
+            y: 5,
+            ease: 'none',
+            duration: 0.25,
+          },
+          0
+        );
+      });
+
+      return () => mm.revert();
     }, sectionRef);
 
     return () => ctx.revert();
