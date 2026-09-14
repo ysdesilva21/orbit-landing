@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function AIInsightCard() {
   return (
     <div className="w-[275px] rounded-[10px] border border-[#EBE8F0] bg-white/95 shadow-lg px-4 py-2 backdrop-blur-sm">

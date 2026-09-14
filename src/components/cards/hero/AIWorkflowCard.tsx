@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function AIWorkflowCard() {
   return (
     <div className="w-[360px] rounded-[10px] border border-[#EBE8F0] bg-white/95 px-2 py-2 shadow-lg backdrop-blur-sm">

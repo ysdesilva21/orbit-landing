@@ -1,5 +1,3 @@
-import React from "react";
-
 import chartSrc from "../../../assets/images/orbit-business-chart.png"
 
 export default function BusinessOverviewCard() {

@@ -1,9 +1,17 @@
-import React, { useState, useRef } from "react";
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  useCallback,
+} from "react";
 import { gsap } from "gsap";
 import { Draggable } from "gsap/Draggable";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 import DashboardSprawlCard from "../components/cards/problem/DashboardSprawlCard";
 import DataScatteredCard from "../components/cards/problem/DataScatteredCard";
@@ -11,44 +19,51 @@ import ReportingTakesDaysCard from "../components/cards/problem/ReportingTakesDa
 
 gsap.registerPlugin(Draggable, ScrollTrigger);
 
+const CARDS = [
+  {
+    id: "scattered",
+    component: <DataScatteredCard />,
+  },
+  {
+    id: "sprawl",
+    component: <DashboardSprawlCard />,
+  },
+  {
+    id: "reporting",
+    component: <ReportingTakesDaysCard />,
+  },
+];
+
 const ProblemSection: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  const sectionRef = useRef<HTMLElement>(null);
+  const activeIndexRef = useRef(activeIndex);
 
-  const headingRef = useRef<HTMLDivElement>(null);
-  const desktopCardsRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    activeIndexRef.current = activeIndex;
+  }, [activeIndex]);
 
-  const trackRef = useRef<HTMLDivElement>(null);
-  const mobileCardsRef = useRef<HTMLDivElement>(null);
-
-  const cards = [
-    {
-      id: "scattered",
-      component: <DataScatteredCard />,
-    },
-    {
-      id: "sprawl",
-      component: <DashboardSprawlCard />,
-    },
-    {
-      id: "reporting",
-      component: <ReportingTakesDaysCard />,
-    },
-  ];
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const headingRef = useRef<HTMLDivElement | null>(null);
+  const desktopCardsRef = useRef<HTMLDivElement | null>(null);
+  const trackRef = useRef<HTMLDivElement | null>(null);
 
   /*
   ============================================================
-  CAROUSEL ANIMATION
+  CAROUSEL CONTROLS & ANIMATIONS
   ============================================================
   */
+  const animateCards = useCallback((index: number) => {
+    const track = trackRef.current;
 
-  const animateCards = (index: number) => {
-    if (!mobileCardsRef.current) return;
+    if (!(track instanceof HTMLDivElement)) return;
 
-    const cardElements = Array.from(
-      mobileCardsRef.current.children
-    ) as HTMLElement[];
+    const cardElements: HTMLElement[] = Array.from(
+      track.children
+    ).filter(
+      (element): element is HTMLElement =>
+        element instanceof HTMLElement
+    );
 
     cardElements.forEach((card, i) => {
       gsap.to(card, {
@@ -56,37 +71,40 @@ const ProblemSection: React.FC = () => {
         opacity: i === index ? 1 : 0.72,
         duration: 0.55,
         ease: "power3.out",
-        overwrite: true,
+        overwrite: "auto",
       });
     });
-  };
+  }, []);
 
-  const animateToIndex = (index: number) => {
-    if (!trackRef.current) return;
+  const animateToIndex = useCallback(
+    (index: number) => {
+      const track = trackRef.current;
 
-    const track = trackRef.current;
-    const viewport = track.parentElement;
+      if (!(track instanceof HTMLDivElement)) return;
 
-    if (!viewport) return;
+      const viewport = track.parentElement;
 
-    const cardWidth = viewport.clientWidth;
+      if (!(viewport instanceof HTMLElement)) return;
 
-    const clampedIndex = Math.max(
-      0,
-      Math.min(index, cards.length - 1)
-    );
+      const cardWidth = viewport.clientWidth;
 
-    gsap.to(track, {
-      x: -clampedIndex * cardWidth,
-      duration: 0.65,
-      ease: "power3.out",
-      overwrite: true,
-    });
+      const clampedIndex = Math.max(
+        0,
+        Math.min(index, CARDS.length - 1)
+      );
 
-    animateCards(clampedIndex);
+      gsap.to(track, {
+        x: -clampedIndex * cardWidth,
+        duration: 0.65,
+        ease: "power3.out",
+        overwrite: "auto",
+      });
 
-    setActiveIndex(clampedIndex);
-  };
+      animateCards(clampedIndex);
+      setActiveIndex(clampedIndex);
+    },
+    [animateCards]
+  );
 
   const handlePrev = () => {
     if (activeIndex > 0) {
@@ -95,7 +113,7 @@ const ProblemSection: React.FC = () => {
   };
 
   const handleNext = () => {
-    if (activeIndex < cards.length - 1) {
+    if (activeIndex < CARDS.length - 1) {
       animateToIndex(activeIndex + 1);
     }
   };
@@ -105,12 +123,14 @@ const ProblemSection: React.FC = () => {
   SCROLL-DRIVEN SECTION ANIMATION
   ============================================================
   */
-
   useGSAP(
     () => {
       const section = sectionRef.current;
+      const heading = headingRef.current;
+      const desktopCardsContainer =
+        desktopCardsRef.current;
 
-      if (!section) return;
+      if (!(section instanceof HTMLElement)) return;
 
       const reduceMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)"
@@ -118,64 +138,69 @@ const ProblemSection: React.FC = () => {
 
       if (reduceMotion) return;
 
-      const headingEyebrow = headingRef.current?.querySelector(
-        ".problem-eyebrow"
-      );
+      const headingEyebrow =
+        heading?.querySelector<HTMLElement>(
+          ".problem-eyebrow"
+        ) ?? null;
 
-      const heading = headingRef.current?.querySelector(
-        ".problem-heading"
-      );
+      const headingText =
+        heading?.querySelector<HTMLElement>(
+          ".problem-heading"
+        ) ?? null;
 
-      const description = headingRef.current?.querySelector(
-        ".problem-description"
-      );
+      const description =
+        heading?.querySelector<HTMLElement>(
+          ".problem-description"
+        ) ?? null;
 
-      const desktopCards = desktopCardsRef.current
-        ? gsap.utils.toArray<HTMLElement>(
-            desktopCardsRef.current.children
-          )
-        : [];
+      const desktopCards: HTMLElement[] =
+        desktopCardsContainer
+          ? Array.from(
+              desktopCardsContainer.children
+            ).filter(
+              (element): element is HTMLElement =>
+                element instanceof HTMLElement
+            )
+          : [];
 
       /*
       ------------------------------------------------------------
       INITIAL STATES
       ------------------------------------------------------------
       */
+      if (headingEyebrow instanceof HTMLElement) {
+        gsap.set(headingEyebrow, {
+          y: 18,
+          opacity: 0,
+        });
+      }
 
-      gsap.set(headingEyebrow, {
-        y: 18,
-        opacity: 0,
-      });
+      if (headingText instanceof HTMLElement) {
+        gsap.set(headingText, {
+          y: 35,
+          opacity: 0,
+        });
+      }
 
-      gsap.set(heading, {
-        y: 35,
-        opacity: 0,
-      });
+      if (description instanceof HTMLElement) {
+        gsap.set(description, {
+          y: 22,
+          opacity: 0,
+        });
+      }
 
-      gsap.set(description, {
-        y: 22,
-        opacity: 0,
-      });
-
-      gsap.set(desktopCards, {
-        y: 55,
-        opacity: 0,
-      });
+      if (desktopCards.length > 0) {
+        gsap.set(desktopCards, {
+          y: 55,
+          opacity: 0,
+        });
+      }
 
       /*
       ------------------------------------------------------------
-      ENTRANCE + SCROLL-DRIVEN TIMELINE
-      ------------------------------------------------------------
-
-      The important difference:
-
-      There is NO `once: true`.
-
-      The entire animation is tied to scroll progress and
-      therefore reverses when the user scrolls back upward.
+      MAIN TIMELINE
       ------------------------------------------------------------
       */
-
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -188,50 +213,54 @@ const ProblemSection: React.FC = () => {
 
       /*
       ------------------------------------------------------------
-      HEADER REVEAL
+      HEADING
       ------------------------------------------------------------
       */
+      if (headingEyebrow instanceof HTMLElement) {
+        tl.to(
+          headingEyebrow,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.45,
+            ease: "power3.out",
+          },
+          0
+        );
+      }
 
-      tl.to(
-        headingEyebrow,
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.45,
-          ease: "power3.out",
-        },
-        0
-      );
+      if (headingText instanceof HTMLElement) {
+        tl.to(
+          headingText,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.7,
+            ease: "power3.out",
+          },
+          "-=0.25"
+        );
+      }
 
-      tl.to(
-        heading,
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.7,
-          ease: "power3.out",
-        },
-        "-=0.25"
-      );
-
-      tl.to(
-        description,
-        {
-          y: 0,
-          opacity: 1,
-          duration: 0.55,
-          ease: "power3.out",
-        },
-        "-=0.3"
-      );
+      if (description instanceof HTMLElement) {
+        tl.to(
+          description,
+          {
+            y: 0,
+            opacity: 1,
+            duration: 0.55,
+            ease: "power3.out",
+          },
+          "-=0.3"
+        );
+      }
 
       /*
       ------------------------------------------------------------
-      DESKTOP CARD REVEAL
+      DESKTOP CARDS
       ------------------------------------------------------------
       */
-
-      if (desktopCards.length) {
+      if (desktopCards.length > 0) {
         tl.to(
           desktopCards,
           {
@@ -243,95 +272,43 @@ const ProblemSection: React.FC = () => {
           },
           "-=0.25"
         );
-      }
 
-      /*
-      ------------------------------------------------------------
-      SUBTLE DESKTOP PARALLAX
-      ------------------------------------------------------------
+        const firstCard = desktopCards[0];
+        const secondCard = desktopCards[1];
+        const thirdCard = desktopCards[2];
 
-      Cards don't fade out.
+        if (firstCard instanceof HTMLElement) {
+          tl.to(
+            firstCard,
+            {
+              y: -16,
+              ease: "none",
+            },
+            ">"
+          );
+        }
 
-      They simply continue moving upward at slightly different
-      rates as the user scrolls through the section.
-      ------------------------------------------------------------
-      */
+        if (secondCard instanceof HTMLElement) {
+          tl.to(
+            secondCard,
+            {
+              y: -26,
+              ease: "none",
+            },
+            "<"
+          );
+        }
 
-      if (desktopCards.length) {
-        tl.to(
-          desktopCards[0],
-          {
-            y: -16,
-            ease: "none",
-          },
-          ">"
-        );
-
-        tl.to(
-          desktopCards[1],
-          {
-            y: -26,
-            ease: "none",
-          },
-          "<"
-        );
-
-        tl.to(
-          desktopCards[2],
-          {
-            y: -20,
-            ease: "none",
-          },
-          "<"
-        );
-      }
-
-      /*
-      ------------------------------------------------------------
-      MOBILE INITIAL CARD STATE
-      ------------------------------------------------------------
-      */
-
-      if (mobileCardsRef.current) {
-        const mobileCards = Array.from(
-          mobileCardsRef.current.children
-        ) as HTMLElement[];
-
-        gsap.set(mobileCards, {
-          scale: 0.96,
-          opacity: 0.72,
-        });
-
-        gsap.set(mobileCards[0], {
-          scale: 1,
-          opacity: 1,
-        });
-      }
-
-      /*
-      ------------------------------------------------------------
-      MOBILE SCROLL-DRIVEN ENTRANCE
-      ------------------------------------------------------------
-      */
-
-      const mobileCards = mobileCardsRef.current
-        ? gsap.utils.toArray<HTMLElement>(
-            mobileCardsRef.current.children
-          )
-        : [];
-
-      if (mobileCards.length) {
-        tl.to(
-          mobileCards[0],
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.7,
-            ease: "power3.out",
-          },
-          "-=0.35"
-        );
+        if (thirdCard instanceof HTMLElement) {
+          tl.to(
+            thirdCard,
+            {
+              y: -20,
+              ease: "none",
+            },
+            "<"
+          );
+        }
       }
     },
     {
@@ -341,30 +318,61 @@ const ProblemSection: React.FC = () => {
 
   /*
   ============================================================
-  DRAGGABLE CAROUSEL
+  DRAGGABLE CAROUSEL SETUP
   ============================================================
   */
-
   useGSAP(
     () => {
-      if (!trackRef.current) return;
-
       const track = trackRef.current;
+
+      if (!(track instanceof HTMLDivElement)) return;
+
       const viewport = track.parentElement;
 
-      if (!viewport) return;
+      if (!(viewport instanceof HTMLElement)) return;
 
-      const getCardWidth = () => viewport.clientWidth;
+      const getCardWidth = (): number => {
+        return viewport.clientWidth;
+      };
 
-      const draggable = Draggable.create(track, {
+      /*
+      ------------------------------------------------------------
+      CARD ELEMENTS
+      ------------------------------------------------------------
+      */
+      const cardElements: HTMLElement[] = Array.from(
+        track.children
+      ).filter(
+        (element): element is HTMLElement =>
+          element instanceof HTMLElement
+      );
+
+      /*
+      ------------------------------------------------------------
+      INITIAL CARD STATE
+      ------------------------------------------------------------
+      */
+      cardElements.forEach((card, i) => {
+        gsap.set(card, {
+          scale: i === 0 ? 1 : 0.96,
+          opacity: i === 0 ? 1 : 0.72,
+        });
+      });
+
+      /*
+      ------------------------------------------------------------
+      DRAG BOUNDS
+      ------------------------------------------------------------
+      */
+      const getBounds = () => ({
+        minX: viewport.clientWidth - track.scrollWidth,
+        maxX: 0,
+      });
+
+      const drg = Draggable.create(track, {
         type: "x",
-
         edgeResistance: 0.8,
-
-        bounds: () => ({
-          minX: -((cards.length - 1) * getCardWidth()),
-          maxX: 0,
-        }),
+        bounds: getBounds(),
 
         onPress: function () {
           gsap.killTweensOf(track);
@@ -373,18 +381,27 @@ const ProblemSection: React.FC = () => {
         onDrag: function () {
           const cardWidth = getCardWidth();
 
-          const rawIndex = Math.abs(this.x) / cardWidth;
+          if (cardWidth <= 0) return;
+
+          const rawIndex =
+            Math.abs(this.x) / cardWidth;
 
           const leftIndex = Math.floor(rawIndex);
           const rightIndex = Math.ceil(rawIndex);
 
-          const cardElements = Array.from(
-            track.children
-          ) as HTMLElement[];
-
           cardElements.forEach((card, i) => {
-            if (i === leftIndex || i === rightIndex) {
-              const distance = Math.abs(i - rawIndex);
+            if (
+              i === leftIndex ||
+              i === rightIndex
+            ) {
+              const distance = Math.abs(
+                i - rawIndex
+              );
+
+              const clampedDistance = Math.min(
+                distance,
+                1
+              );
 
               gsap.set(card, {
                 scale: gsap.utils.mapRange(
@@ -392,15 +409,14 @@ const ProblemSection: React.FC = () => {
                   1,
                   1,
                   0.96,
-                  Math.min(distance, 1)
+                  clampedDistance
                 ),
-
                 opacity: gsap.utils.mapRange(
                   0,
                   1,
                   1,
                   0.72,
-                  Math.min(distance, 1)
+                  clampedDistance
                 ),
               });
             }
@@ -410,13 +426,18 @@ const ProblemSection: React.FC = () => {
         onDragEnd: function () {
           const cardWidth = getCardWidth();
 
+          if (cardWidth <= 0) return;
+
           const nearestIndex = Math.round(
             Math.abs(this.endX) / cardWidth
           );
 
           const clampedIndex = Math.max(
             0,
-            Math.min(nearestIndex, cards.length - 1)
+            Math.min(
+              nearestIndex,
+              CARDS.length - 1
+            )
           );
 
           animateToIndex(clampedIndex);
@@ -428,199 +449,108 @@ const ProblemSection: React.FC = () => {
       RESIZE
       ------------------------------------------------------------
       */
-
       const handleResize = () => {
         const cardWidth = getCardWidth();
 
+        if (cardWidth <= 0) return;
+
         gsap.set(track, {
-          x: -activeIndex * cardWidth,
+          x:
+            -activeIndexRef.current *
+            cardWidth,
         });
 
-        draggable[0].applyBounds({
-          minX: -((cards.length - 1) * cardWidth),
-          maxX: 0,
-        });
+        const draggable = drg[0];
 
-        animateCards(activeIndex);
+        if (draggable) {
+          draggable.applyBounds(getBounds());
+        }
+
+        animateCards(activeIndexRef.current);
       };
 
-      window.addEventListener("resize", handleResize);
+      window.addEventListener(
+        "resize",
+        handleResize
+      );
 
+      /*
+      ------------------------------------------------------------
+      CLEANUP
+      ------------------------------------------------------------
+      */
       return () => {
-        window.removeEventListener("resize", handleResize);
-        draggable[0].kill();
+        window.removeEventListener(
+          "resize",
+          handleResize
+        );
+
+        const draggable = drg[0];
+
+        if (draggable) {
+          draggable.kill();
+        }
       };
     },
     {
       scope: trackRef,
-      dependencies: [],
     }
   );
 
   return (
     <section
       ref={sectionRef}
-      className="
-        mx-auto
-        w-full
-        max-w-[1240px]
-        overflow-hidden
-        px-4
-        py-8
-        font-['Familjen_Grotesk']
-        text-[#2D3132]
-        sm:px-6
-        sm:py-12
-        md:py-20
-      "
+      className="mx-auto w-full max-w-[1240px] overflow-hidden px-4 py-8 font-['Familjen_Grotesk'] text-[#2D3132] sm:px-6 sm:py-12 md:py-20"
     >
-      {/* =========================================================
-          SECTION HEADING
-      ========================================================= */}
-
+      {/* SECTION HEADING */}
       <div
         ref={headingRef}
-        className="
-          mb-8
-          max-w-2xl
-          text-left
-          sm:mb-10
-          md:mb-14
-        "
+        className="mb-8 max-w-2xl text-left sm:mb-10 md:mb-14"
       >
-        {/* Eyebrow */}
-
-        <span
-          className="
-            problem-eyebrow
-            mb-2
-            block
-            text-[16px]
-            font-medium
-            uppercase
-            tracking-wider
-            text-[var(--accent)]
-            sm:mb-3
-            sm:text-[18px]
-          "
-        >
+        <span className="problem-eyebrow mb-2 block text-[16px] font-medium uppercase tracking-wider text-[var(--accent)] sm:mb-3 sm:text-[18px]">
           THE PROBLEM
         </span>
 
-        {/* Heading */}
-
-        <h2
-          className="
-            problem-heading
-            mb-3
-            text-2xl
-            font-semibold
-            leading-tight
-            tracking-tight
-            text-[var(--primary)]
-            sm:text-3xl
-            md:text-4xl
-            lg:text-[40px]
-          "
-        >
+        <h2 className="problem-heading mb-3 text-2xl font-semibold leading-tight tracking-tight text-[var(--primary)] sm:text-3xl md:text-4xl lg:text-[40px]">
           Stop searching for the{" "}
-          <span
-            className="
-              font-serif-italic
-              text-3xl
-              font-normal
-              text-[var(--secondary)]
-              sm:text-4xl
-              md:text-[46px]
-            "
-          >
+          <span className="font-serif-italic text-3xl font-normal text-[var(--secondary)] sm:text-4xl md:text-[46px]">
             signal.
           </span>
         </h2>
 
-        {/* Description */}
-
-        <p
-          className="
-            problem-description
-            text-xs
-            font-normal
-            leading-relaxed
-            text-[#555B5D]
-            sm:text-sm
-            md:text-base
-          "
-        >
-          Most teams don't lack data. They lack a way to see it clearly.
-          Every additional tool adds another place the answer might be
-          hiding.
+        <p className="problem-description text-xs font-normal leading-relaxed text-[#555B5D] sm:text-sm md:text-base">
+          Most teams don't lack data. They lack a way
+          to see it clearly. Every additional tool adds
+          another place the answer might be hiding.
         </p>
       </div>
 
-      {/* =========================================================
-          DESKTOP CARDS
-      ========================================================= */}
-
+      {/* DESKTOP CARDS */}
       <div
         ref={desktopCardsRef}
-        className="
-          hidden
-          items-stretch
-          gap-6
-          lg:grid
-          lg:grid-cols-3
-          [&>div>div]:h-full
-        "
+        className="hidden items-stretch gap-6 lg:grid lg:grid-cols-3 [&>div>div]:h-full"
       >
-        {cards.map((card) => (
+        {CARDS.map((card) => (
           <div
             key={card.id}
-            className="
-              h-full
-              w-full
-              will-change-transform
-            "
+            className="h-full w-full will-change-transform"
           >
             {card.component}
           </div>
         ))}
       </div>
 
-      {/* =========================================================
-          MOBILE / TABLET CAROUSEL
-      ========================================================= */}
-
+      {/* MOBILE / TABLET CAROUSEL */}
       <div className="block w-full overflow-hidden lg:hidden">
-        <div
-          className="
-            mx-auto
-            w-full
-            max-w-[360px]
-            overflow-hidden
-          "
-        >
+        <div className="mx-auto w-full max-w-[360px] overflow-hidden">
           <div
             ref={trackRef}
-            className="
-              flex
-              cursor-grab
-              items-stretch
-              touch-pan-y
-              will-change-transform
-              active:cursor-grabbing
-            "
+            className="flex cursor-grab items-stretch touch-pan-y will-change-transform active:cursor-grabbing"
           >
-            {cards.map((card) => (
+            {CARDS.map((card) => (
               <div
                 key={card.id}
-                className="
-                  flex
-                  w-full
-                  shrink-0
-                  justify-center
-                  px-1
-                  will-change-transform
-                "
+                className="flex w-full shrink-0 justify-center px-1 will-change-transform"
               >
                 {card.component}
               </div>
@@ -628,94 +558,44 @@ const ProblemSection: React.FC = () => {
           </div>
         </div>
 
-        {/* =======================================================
-            CONTROLS
-        ======================================================= */}
-
-        <div
-          className="
-            mx-auto
-            mt-6
-            flex
-            max-w-[360px]
-            items-center
-            justify-between
-            px-2
-          "
-        >
-          {/* Previous */}
-
+        {/* CONTROLS */}
+        <div className="mx-auto mt-6 flex max-w-[360px] items-center justify-between px-2">
           <button
+            type="button"
             onClick={handlePrev}
             disabled={activeIndex === 0}
             aria-label="Previous card"
-            className="
-              flex
-              items-center
-              justify-center
-              rounded-full
-              border
-              border-slate-200
-              bg-white
-              p-2
-              text-slate-700
-              shadow-xs
-              transition-all
-              hover:bg-slate-50
-              active:scale-95
-              disabled:pointer-events-none
-              disabled:opacity-30
-            "
+            className="flex items-center justify-center rounded-full border border-slate-200 bg-white p-2 text-slate-700 shadow-xs transition-all hover:bg-slate-50 active:scale-95 disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
 
-          {/* Pagination */}
-
           <div className="flex items-center space-x-2">
-            {cards.map((_, idx) => (
+            {CARDS.map((_, idx) => (
               <button
                 key={idx}
-                onClick={() => animateToIndex(idx)}
+                type="button"
+                onClick={() =>
+                  animateToIndex(idx)
+                }
                 aria-label={`Go to slide ${idx + 1}`}
-                className={`
-                  h-2.5
-                  rounded-full
-                  transition-all
-                  duration-300
-                  ${
-                    activeIndex === idx
-                      ? "w-7 bg-[#614986]"
-                      : "w-2.5 bg-slate-300"
-                  }
-                `}
+                className={`h-2.5 rounded-full transition-all duration-300 ${
+                  activeIndex === idx
+                    ? "w-7 bg-[#614986]"
+                    : "w-2.5 bg-slate-300"
+                }`}
               />
             ))}
           </div>
 
-          {/* Next */}
-
           <button
+            type="button"
             onClick={handleNext}
-            disabled={activeIndex === cards.length - 1}
+            disabled={
+              activeIndex === CARDS.length - 1
+            }
             aria-label="Next card"
-            className="
-              flex
-              items-center
-              justify-center
-              rounded-full
-              border
-              border-slate-200
-              bg-white
-              p-2
-              text-slate-700
-              shadow-xs
-              transition-all
-              hover:bg-slate-50
-              active:scale-95
-              disabled:pointer-events-none
-              disabled:opacity-30
-            "
+            className="flex items-center justify-center rounded-full border border-slate-200 bg-white p-2 text-slate-700 shadow-xs transition-all hover:bg-slate-50 active:scale-95 disabled:pointer-events-none disabled:opacity-30"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
