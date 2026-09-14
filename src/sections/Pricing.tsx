@@ -324,39 +324,40 @@ export const Pricing: React.FC = () => {
         */
         if (eyebrow instanceof HTMLElement) {
           gsap.set(eyebrow, {
-            y: 10,
+            y: 8,
             opacity: 0,
           });
         }
 
         if (heading instanceof HTMLElement) {
           gsap.set(heading, {
-            y: 18,
+            y: 14,
             opacity: 0,
           });
         }
 
         if (description instanceof HTMLElement) {
           gsap.set(description, {
-            y: 12,
+            y: 10,
             opacity: 0,
           });
         }
 
         if (billingToggle instanceof HTMLElement) {
           gsap.set(billingToggle, {
-            y: 10,
+            y: 8,
             opacity: 0,
           });
         }
 
         /*
-        Cards start much closer to their final position.
-        This makes them feel responsive on smaller screens.
+        Cards stay close to their final position.
+        The goal is a quick section reveal rather than
+        a large entrance animation.
         */
         if (cards.length > 0) {
           gsap.set(cards, {
-            y: 24,
+            y: 18,
             opacity: 0,
           });
         }
@@ -369,9 +370,9 @@ export const Pricing: React.FC = () => {
         const mobileTl = gsap.timeline({
           scrollTrigger: {
             trigger: section,
-            start: "top 90%",
-            end: "bottom 72%",
-            scrub: 0.45,
+            start: "top 92%",
+            end: "top 58%",
+            scrub: 0.3,
             invalidateOnRefresh: true,
           },
         });
@@ -387,7 +388,7 @@ export const Pricing: React.FC = () => {
             {
               y: 0,
               opacity: 1,
-              duration: 0.25,
+              duration: 0.2,
               ease: "power2.out",
             },
             0
@@ -400,10 +401,10 @@ export const Pricing: React.FC = () => {
             {
               y: 0,
               opacity: 1,
-              duration: 0.4,
+              duration: 0.28,
               ease: "power2.out",
             },
-            "-=0.12"
+            "-=0.1"
           );
         }
 
@@ -413,10 +414,10 @@ export const Pricing: React.FC = () => {
             {
               y: 0,
               opacity: 1,
-              duration: 0.3,
+              duration: 0.22,
               ease: "power2.out",
             },
-            "-=0.12"
+            "-=0.08"
           );
         }
 
@@ -426,21 +427,20 @@ export const Pricing: React.FC = () => {
             {
               y: 0,
               opacity: 1,
-              duration: 0.3,
+              duration: 0.22,
               ease: "power2.out",
             },
-            "-=0.1"
+            "-=0.08"
           );
         }
 
         /*
         ------------------------------------------------------------
-        MOBILE CARDS
+        MOBILE PRICING CARDS
         ------------------------------------------------------------
 
-        Cards appear as complete units.
-        They overlap heavily so the user doesn't need to scroll
-        excessively before seeing the full pricing section.
+        Each card appears as a complete unit.
+        The overlap keeps the section from feeling slow.
         */
         const firstCard = cards[0];
         const secondCard = cards[1];
@@ -452,10 +452,10 @@ export const Pricing: React.FC = () => {
             {
               y: 0,
               opacity: 1,
-              duration: 0.35,
+              duration: 0.3,
               ease: "power2.out",
             },
-            "-=0.08"
+            "-=0.05"
           );
         }
 
@@ -465,10 +465,10 @@ export const Pricing: React.FC = () => {
             {
               y: 0,
               opacity: 1,
-              duration: 0.35,
+              duration: 0.3,
               ease: "power2.out",
             },
-            "-=0.18"
+            "-=0.2"
           );
         }
 
@@ -478,10 +478,10 @@ export const Pricing: React.FC = () => {
             {
               y: 0,
               opacity: 1,
-              duration: 0.35,
+              duration: 0.3,
               ease: "power2.out",
             },
-            "-=0.18"
+            "-=0.2"
           );
         }
 
@@ -490,9 +490,9 @@ export const Pricing: React.FC = () => {
         NO MOBILE CONTENT DEPTH
         ------------------------------------------------------------
 
-        The cards already contain a lot of vertical content.
-        Additional internal movement makes mobile feel slower
-        without adding much visual value.
+        The pricing cards are already vertically dense.
+        Internal parallax would make the section feel slower
+        without providing meaningful visual hierarchy.
         */
       });
 
