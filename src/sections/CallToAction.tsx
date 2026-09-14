@@ -49,27 +49,9 @@ export const CallToAction: React.FC = () => {
         return;
       }
 
-      /*
-      ========================================================
-      RESPONSIVE ANIMATION
-      ========================================================
-      */
-
       const mm = gsap.matchMedia();
 
-      /*
-      ========================================================
-      DESKTOP
-      ========================================================
-      */
-
       mm.add('(min-width: 768px)', () => {
-        /*
-        --------------------------------------------------------
-        INITIAL STATES
-        --------------------------------------------------------
-        */
-
         gsap.set(cardRef.current, {
           opacity: 0,
           y: 45,
@@ -104,12 +86,6 @@ export const CallToAction: React.FC = () => {
           opacity: 0,
         });
 
-        /*
-        --------------------------------------------------------
-        SCROLL-DRIVEN ANIMATION
-        --------------------------------------------------------
-        */
-
         const tl = gsap.timeline({
           scrollTrigger: {
             trigger: sectionRef.current,
@@ -119,12 +95,6 @@ export const CallToAction: React.FC = () => {
             invalidateOnRefresh: true,
           },
         });
-
-        /*
-        --------------------------------------------------------
-        CARD
-        --------------------------------------------------------
-        */
 
         tl.to(
           cardRef.current,
@@ -136,12 +106,6 @@ export const CallToAction: React.FC = () => {
           },
           0
         );
-
-        /*
-        --------------------------------------------------------
-        BACKGROUND
-        --------------------------------------------------------
-        */
 
         tl.to(
           gridRef.current,
