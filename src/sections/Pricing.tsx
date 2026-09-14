@@ -379,6 +379,7 @@ export const Pricing: React.FC = () => {
     <section
       ref={sectionRef}
       className="w-full bg-white py-20"
+      id="pricing"
     >
       <div className="mx-auto max-w-7xl px-6">
         <div

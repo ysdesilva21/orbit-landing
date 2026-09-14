@@ -68,6 +68,7 @@ export const PlatformSection: React.FC = () => {
     <section
       ref={sectionRef}
       className="w-full py-20 px-4 sm:px-6 lg:px-8"
+      id="product"
     >
       <div className="max-w-6xl mx-auto space-y-24">
         {/* Section Header */}

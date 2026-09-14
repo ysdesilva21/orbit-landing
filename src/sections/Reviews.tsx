@@ -375,6 +375,7 @@ export const Reviews: React.FC = () => {
     <section
       ref={sectionRef}
       className="bg-white py-20"
+      id="trust"
     >
       <div className="mx-auto max-w-7xl px-6">
 

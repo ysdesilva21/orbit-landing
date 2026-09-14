@@ -349,6 +349,7 @@ export const HowItWorksSection: React.FC = () => {
     <section
       ref={sectionRef}
       className="w-full bg-white py-20 px-4 sm:px-6 lg:px-8"
+      id="solutions"
     >
       <div className="max-w-6xl mx-auto space-y-12">
         {/* Section Header */}
